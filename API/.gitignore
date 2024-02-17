@@ -1,0 +1,18 @@
+# Operating System Files
+.DS_Store  # MacOS specific
+Thumbs.db  # Windows specific
+
+# Compiled Files/Build Artifacts
+node_modules/
+dist/
+
+# Logs and Temporary Files
+*.log
+*.tmp
+
+# IDE specific files
+.idea/
+.vscode/
+
+# Personal Secrets
+.env

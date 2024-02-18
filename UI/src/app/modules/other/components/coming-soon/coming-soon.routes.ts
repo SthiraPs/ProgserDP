@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { ComingSoonComponent } from 'app/modules/other/coming-soon/coming-soon.component';
+import { ComingSoonComponent } from 'app/modules/other/components/coming-soon/coming-soon.component';
 
 export default [
     {

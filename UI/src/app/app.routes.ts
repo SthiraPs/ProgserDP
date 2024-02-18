@@ -59,9 +59,10 @@ export const appRoutes: Route[] = [
             {path: 'requests', loadChildren: () => import('app/modules/user/requests/requests.routes')},
             {path: 'problems', loadChildren: () => import('app/modules/user/problems/problems.routes')},
             {path: 'changes', loadChildren: () => import('app/modules/user/changes/changes.routes')},
-            {path: 'coming-soon', loadChildren: () => import('app/modules/other/coming-soon/coming-soon.routes')},
-            {path: 'coming-soon2', loadChildren: () => import('app/modules/other/coming-soon/coming-soon.routes')},
-            {path: 'coming-soon3', loadChildren: () => import('app/modules/other/coming-soon/coming-soon.routes')},
+            {path: 'coming-soon', loadChildren: () => import('app/modules/other/components/coming-soon/coming-soon.routes')},
+            {path: 'coming-soon2', loadChildren: () => import('app/modules/other/components/coming-soon/coming-soon.routes')},
+            {path: 'coming-soon3', loadChildren: () => import('app/modules/other/components/coming-soon/coming-soon.routes')},
+            {path: 'admin-panel', loadChildren: () => import('app/modules/admin/admin-panel/admin-panel.routes')},
         ]
     }
 ];

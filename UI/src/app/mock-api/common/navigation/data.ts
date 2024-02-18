@@ -67,4 +67,10 @@ export const horizontalNavigation: FuseNavigationItem[] = [
         type: 'basic',
         link: '/coming-soon3',
     },
+    {
+        id: 'admin-panel',
+        title: 'Admin Panel',
+        type: 'basic',
+        link: '/admin-panel',
+    },
 ];

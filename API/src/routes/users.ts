@@ -4,6 +4,9 @@ import usersController from '../controllers/usersController';
 const router = Router();
 
 router.get('/', usersController.getUsers);
-// Add routes for POST, PUT, DELETE as needed
+router.get('/:id', usersController.getUserById);
+router.post('/', usersController.createUser);
+router.patch('/:id', usersController.updateUser);
+router.delete('/:id', usersController.deleteUser);
 
 export default router;

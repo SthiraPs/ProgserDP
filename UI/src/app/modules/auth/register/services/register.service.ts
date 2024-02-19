@@ -13,11 +13,18 @@ export class RegisterService {
 
     constructor(
         private http: HttpClient,
-        private _notificationService: NotificationService
+        private _notificationService: NotificationService,
+        
     ) {}
 
-    getUserById(id: string) {
-        return this.http.get<UserModel>(`${this.apiUrl}/${id}`);
+    getUsers() {
+      return this.http.get<UserModel[]>(this.apiUrl).pipe(
+        catchError(error => {
+          // Error handling logic here
+          console.error("Error fetching users:", error); 
+          return throwError(() => error); // Or a more informative error type
+        })
+      );
     }
 
     createUser(user: UserModel): Observable<ResponseModel> {

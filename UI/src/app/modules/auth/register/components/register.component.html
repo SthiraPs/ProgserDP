@@ -40,13 +40,26 @@
             />
         </mat-form-field>
 
-        <!-- Cc -->
-        <mat-form-field>
-            <input
-                matInput
-                [formControlName]="'department'"
-                placeholder="Department"
-            />
+        <mat-form-field class="flex-auto gt-xs:pl-3">
+            <mat-select placeholder="Department" formControlName="department">
+                <mat-option
+                    *ngFor="let option of departmentsList"
+                    [value]="option.departmentId"
+                >
+                    {{ option.department }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="flex-auto gt-xs:pl-3">
+            <mat-select placeholder="Role" formControlName="role">
+                <mat-option
+                    *ngFor="let option of rolesList"
+                    [value]="option.roleId"
+                >
+                    {{ option.role }}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
 
         <!-- Actions -->

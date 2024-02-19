@@ -1,5 +1,11 @@
 import { Component } from '@angular/core';
-import { CommonModule, CurrencyPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import {
+    CommonModule,
+    CurrencyPipe,
+    NgClass,
+    NgFor,
+    NgIf,
+} from '@angular/common';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,6 +21,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     selector: 'app-requests',
     standalone: true,
     imports: [
+        CommonModule,
         TranslocoModule,
         MatIconModule,
         MatButtonModule,

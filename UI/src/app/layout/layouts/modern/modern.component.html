@@ -50,6 +50,7 @@
             </div>
             <!-- Horizontal navigation -->
             <fuse-horizontal-navigation
+                *ngIf="navigation"
                 class="mr-2"
                 [name]="'mainNavigation'"
                 [navigation]="navigation.horizontal"

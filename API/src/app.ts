@@ -5,6 +5,7 @@ import cors from "cors";
 import corsMiddleware from "./middleware/cors.middleware";
 import catchAllMiddleware from "./middleware/catchAll.middleware";
 
+import authRoutes from "./routes/auth";
 import userRoutes from "./routes/users";
 import requestsRoutes from "./routes/requests";
 import rolesRoutes from "./routes/roles";
@@ -24,6 +25,7 @@ app.use(corsMiddleware);
 app.use(express.json());
 
 // Routes
+app.use("/api/sign-in", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/requests", requestsRoutes);
 app.use("/api/roles", rolesRoutes);

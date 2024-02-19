@@ -13,7 +13,7 @@
     >
         <div class="flex flex-col flex-auto shadow-md chart">
             <div class="font-medium text-secondary m-4">New vs. Closed</div>
-            <div class="flex flex-col flex-auto">
+            <div class="flex flex-col flex-auto" *ngIf="chartOneOptions">
                 <div id="chart-1">
                     <apx-chart
                         [series]="chartOneOptions.series"
@@ -28,7 +28,7 @@
             <div class="font-medium text-secondary m-4">
                 SLA Violated vs Non Violated
             </div>
-            <div class="flex flex-col flex-auto">
+            <div class="flex flex-col flex-auto" *ngIf="chartTwoOptions">
                 <div id="chart-2">
                     <apx-chart
                         [series]="chartTwoOptions.series"
@@ -41,7 +41,7 @@
 
         <div class="flex flex-col flex-auto shadow-md chart">
             <div class="font-medium text-secondary m-4">New vs. Closed</div>
-            <div class="flex flex-col flex-auto">
+            <div class="flex flex-col flex-auto" *ngIf="chartThreeOptions">
                 <div id="chart-3">
                     <apx-chart
                         [series]="chartThreeOptions.series"
@@ -54,7 +54,7 @@
 
         <div class="flex flex-col flex-auto shadow-md chart">
             <div class="font-medium text-secondary m-4">New vs. Closed</div>
-            <div class="flex flex-col flex-auto">
+            <div class="flex flex-col flex-auto" *ngIf="chartFourOptions">
                 <div id="chart-4">
                     <apx-chart
                         [series]="chartFourOptions.series"

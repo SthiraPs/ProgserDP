@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import {
     CommonModule,
     CurrencyPipe,
@@ -31,6 +31,7 @@ export type ChartOptions = {
     selector: 'app-dashboard',
     standalone: true,
     imports: [
+        CommonModule,
         TranslocoModule,
         MatIconModule,
         MatButtonModule,
@@ -54,12 +55,17 @@ export class DashboardComponent {
     public chartThreeOptions: Partial<ChartOptions>;
     public chartFourOptions: Partial<ChartOptions>;
 
-    private _cdRef: ChangeDetectorRef;
-
     users: User[];
 
-    recentTransactionsDataSource: MatTableDataSource<any> = new MatTableDataSource();
-    recentTransactionsTableColumns: string[] = ['transactionId', 'date', 'name', 'amount', 'status'];
+    recentTransactionsDataSource: MatTableDataSource<any> =
+        new MatTableDataSource();
+    recentTransactionsTableColumns: string[] = [
+        'transactionId',
+        'date',
+        'name',
+        'amount',
+        'status',
+    ];
 
     constructor(
         private _dashboardService: DashboardService,
@@ -105,7 +111,6 @@ export class DashboardComponent {
                 },
             };
             this.recentTransactionsDataSource.data = res;
-
         });
     }
 
@@ -216,7 +221,7 @@ export class DashboardComponent {
                 chart: {
                     height: 300,
                     type: 'line',
-                    stacked: false
+                    stacked: false,
                 },
                 title: {
                     text: 'My First Angular Chart',
@@ -239,8 +244,7 @@ export class DashboardComponent {
         });
     }
 
-    trackByFn(index: number, item: any): any
-    {
+    trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 }

@@ -7,7 +7,7 @@ import { LayoutComponent } from 'app/layout/layout.component';
 export const appRoutes: Route[] = [
 
     {path: '', pathMatch : 'full', redirectTo: 'home'},
-    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'dashboard'},
+    {path: 'signed-in-redirect', pathMatch : 'full', redirectTo: 'home'},
 
     // Auth routes for guests
     {

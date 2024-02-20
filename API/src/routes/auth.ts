@@ -3,6 +3,7 @@ import authController from '../controllers/authController';
 
 const router = Router();
 
-router.post('/', authController.signIn);
+router.post('/sign-in', authController.signIn);
+router.post('/sign-in-with-token', authController.signInWithToken);
 
 export default router;

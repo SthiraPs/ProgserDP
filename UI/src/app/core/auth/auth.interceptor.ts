@@ -2,6 +2,7 @@ import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angul
 import { inject } from '@angular/core';
 import { AuthService } from 'app/core/auth/auth.service';
 import { AuthUtils } from 'app/core/auth/auth.utils';
+import { SignInService } from 'app/modules/auth/sign-in/services/sign-in.service';
 import { catchError, Observable, throwError } from 'rxjs';
 
 /**
@@ -12,7 +13,8 @@ import { catchError, Observable, throwError } from 'rxjs';
  */
 export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> =>
 {
-    const authService = inject(AuthService);
+    //const authService = inject(AuthService);
+    const signInService = inject(SignInService);
 
     // Clone the request object
     let newReq = req.clone();
@@ -25,10 +27,11 @@ export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
     // for the protected API routes which our response interceptor will
     // catch and delete the access token from the local storage while logging
     // the user out from the app.
-    if ( authService.accessToken && !AuthUtils.isTokenExpired(authService.accessToken) )
+
+    if ( signInService.accessToken && !AuthUtils.isTokenExpired(signInService.accessToken) )
     {
         newReq = req.clone({
-            headers: req.headers.set('Authorization', 'Bearer ' + authService.accessToken),
+            headers: req.headers.set('Authorization', 'Bearer ' + signInService.accessToken),
         });
     }
 
@@ -40,7 +43,7 @@ export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
             if ( error instanceof HttpErrorResponse && error.status === 401 )
             {
                 // Sign out
-                authService.signOut();
+                signInService.signOut();
 
                 // Reload the app
                 location.reload();

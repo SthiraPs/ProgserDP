@@ -69,6 +69,8 @@ export class AuthUnlockSessionComponent implements OnInit {
      * On init
      */
     ngOnInit(): void {
+        console.log('unlockkkkkkkkkk')
+
         // Get the user's name
         this._userService.user$.subscribe((user) => {
             this.name = user.name;
@@ -95,6 +97,7 @@ export class AuthUnlockSessionComponent implements OnInit {
      * Unlock
      */
     unlock(): void {
+        console.log('unlock123')
         // Return if the form is invalid
         if (this.unlockSessionForm.invalid) {
             return;

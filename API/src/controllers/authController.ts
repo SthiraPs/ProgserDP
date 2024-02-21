@@ -16,7 +16,7 @@ const signIn = async (req: Request, res: Response) => {
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: "Invalid credentials" });
+      return res.status(400).json({ error: "Invapi/common/naviid credentials" });
     }
 
     // Compare password with hash
@@ -43,10 +43,6 @@ const signInWithToken = async (req: Request, res: Response) => {
   try {
     const accessToken = req.body.accessToken;
     const email = req.body.email;
-
-    console.log(accessToken);
-    console.log(email);
-
     const user = await User.findOne({ email });
 
     if (!user) {

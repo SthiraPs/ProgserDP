@@ -6,8 +6,8 @@ import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { FusePlatformService } from '@fuse/services/platform';
 import { FUSE_VERSION } from '@fuse/version';
 import { combineLatest, filter, map, Subject, takeUntil } from 'rxjs';
-import { EmptyLayoutComponent } from './layouts/empty/empty.component';
-import { ModernLayoutComponent } from './layouts/modern/modern.component';
+import { EmptyLayoutComponent } from '../empty-menu/empty.component';
+import { ModernLayoutComponent } from '../menu-bar/modern.component';
 
 @Component({
     selector     : 'layout',

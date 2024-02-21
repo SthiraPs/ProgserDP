@@ -1,36 +1,31 @@
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
+import { DatePipe, NgClass, NgFor, NgIf, NgTemplateOutlet } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, TemplateRef, ViewChild, ViewContainerRef, ViewEncapsulation } from '@angular/core';
-import { FormsModule, ReactiveFormsModule, UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { MatButton, MatButtonModule } from '@angular/material/button';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterLink } from '@angular/router';
-import { ShortcutsService } from 'app/layout/common/shortcuts/shortcuts.service';
-import { Shortcut } from 'app/layout/common/shortcuts/shortcuts.types';
+import { NotificationsService } from 'app/layout/layouts/components/notifications/notifications.service';
+import { Notification } from 'app/layout/layouts/components/notifications/notifications.types';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
-    selector       : 'shortcuts',
-    templateUrl    : './shortcuts.component.html',
+    selector       : 'notifications',
+    templateUrl    : './notifications.component.html',
     encapsulation  : ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
-    exportAs       : 'shortcuts',
+    exportAs       : 'notifications',
     standalone     : true,
-    imports        : [MatButtonModule, MatIconModule, NgIf, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatSlideToggleModule],
+    imports        : [MatButtonModule, NgIf, MatIconModule, MatTooltipModule, NgFor, NgClass, NgTemplateOutlet, RouterLink, DatePipe],
 })
-export class ShortcutsComponent implements OnInit, OnDestroy
+export class NotificationsComponent implements OnInit, OnDestroy
 {
-    @ViewChild('shortcutsOrigin') private _shortcutsOrigin: MatButton;
-    @ViewChild('shortcutsPanel') private _shortcutsPanel: TemplateRef<any>;
+    @ViewChild('notificationsOrigin') private _notificationsOrigin: MatButton;
+    @ViewChild('notificationsPanel') private _notificationsPanel: TemplateRef<any>;
 
-    mode: 'view' | 'modify' | 'add' | 'edit' = 'view';
-    shortcutForm: UntypedFormGroup;
-    shortcuts: Shortcut[];
+    notifications: Notification[];
+    unreadCount: number = 0;
     private _overlayRef: OverlayRef;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
@@ -39,8 +34,7 @@ export class ShortcutsComponent implements OnInit, OnDestroy
      */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
-        private _formBuilder: UntypedFormBuilder,
-        private _shortcutsService: ShortcutsService,
+       /// private _notificationsService: NotificationsService,
         private _overlay: Overlay,
         private _viewContainerRef: ViewContainerRef,
     )
@@ -56,27 +50,27 @@ export class ShortcutsComponent implements OnInit, OnDestroy
      */
     ngOnInit(): void
     {
-        // Initialize the form
-        this.shortcutForm = this._formBuilder.group({
-            id         : [null],
-            label      : ['', Validators.required],
-            description: [''],
-            icon       : ['', Validators.required],
-            link       : ['', Validators.required],
-            useRouter  : ['', Validators.required],
-        });
+        this.notifications = null;
 
-        // Get the shortcuts
-        this._shortcutsService.shortcuts$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((shortcuts: Shortcut[]) =>
-            {
-                // Load the shortcuts
-                this.shortcuts = shortcuts;
+                // Calculate the unread count
+                //this._calculateUnreadCount();
 
                 // Mark for check
-                this._changeDetectorRef.markForCheck();
-            });
+                //this._changeDetectorRef.markForCheck();
+        // // Subscribe to notification changes
+        // this._notificationsService.notifications$
+        //     .pipe(takeUntil(this._unsubscribeAll))
+        //     .subscribe((notifications: Notification[]) =>
+        //     {
+        //         // Load the notifications
+        //         this.notifications = notifications;
+
+        //         // Calculate the unread count
+        //         this._calculateUnreadCount();
+
+        //         // Mark for check
+        //         this._changeDetectorRef.markForCheck();
+        //     });
     }
 
     /**
@@ -100,18 +94,15 @@ export class ShortcutsComponent implements OnInit, OnDestroy
     // -----------------------------------------------------------------------------------------------------
 
     /**
-     * Open the shortcuts panel
+     * Open the notifications panel
      */
     openPanel(): void
     {
-        // Return if the shortcuts panel or its origin is not defined
-        if ( !this._shortcutsPanel || !this._shortcutsOrigin )
+        // Return if the notifications panel or its origin is not defined
+        if ( !this._notificationsPanel || !this._notificationsOrigin )
         {
             return;
         }
-
-        // Make sure to start in 'view' mode
-        this.mode = 'view';
 
         // Create the overlay if it doesn't exist
         if ( !this._overlayRef )
@@ -120,11 +111,11 @@ export class ShortcutsComponent implements OnInit, OnDestroy
         }
 
         // Attach the portal to the overlay
-        this._overlayRef.attach(new TemplatePortal(this._shortcutsPanel, this._viewContainerRef));
+        this._overlayRef.attach(new TemplatePortal(this._notificationsPanel, this._viewContainerRef));
     }
 
     /**
-     * Close the shortcuts panel
+     * Close the notifications panel
      */
     closePanel(): void
     {
@@ -132,74 +123,33 @@ export class ShortcutsComponent implements OnInit, OnDestroy
     }
 
     /**
-     * Change the mode
+     * Mark all notifications as read
      */
-    changeMode(mode: 'view' | 'modify' | 'add' | 'edit'): void
+    markAllAsRead(): void
     {
-        // Change the mode
-        this.mode = mode;
+        // Mark all as read
+       // this._notificationsService.markAllAsRead().subscribe();
     }
 
     /**
-     * Prepare for a new shortcut
+     * Toggle read status of the given notification
      */
-    newShortcut(): void
+    toggleRead(notification: Notification): void
     {
-        // Reset the form
-        this.shortcutForm.reset();
+        // Toggle the read status
+        notification.read = !notification.read;
 
-        // Enter the add mode
-        this.mode = 'add';
+        // Update the notification
+      //  this._notificationsService.update(notification.id, notification).subscribe();
     }
 
     /**
-     * Edit a shortcut
+     * Delete the given notification
      */
-    editShortcut(shortcut: Shortcut): void
+    delete(notification: Notification): void
     {
-        // Reset the form with the shortcut
-        this.shortcutForm.reset(shortcut);
-
-        // Enter the edit mode
-        this.mode = 'edit';
-    }
-
-    /**
-     * Save shortcut
-     */
-    save(): void
-    {
-        // Get the data from the form
-        const shortcut = this.shortcutForm.value;
-
-        // If there is an id, update it...
-        if ( shortcut.id )
-        {
-            this._shortcutsService.update(shortcut.id, shortcut).subscribe();
-        }
-        // Otherwise, create a new shortcut...
-        else
-        {
-            this._shortcutsService.create(shortcut).subscribe();
-        }
-
-        // Go back the modify mode
-        this.mode = 'modify';
-    }
-
-    /**
-     * Delete shortcut
-     */
-    delete(): void
-    {
-        // Get the data from the form
-        const shortcut = this.shortcutForm.value;
-
-        // Delete
-        this._shortcutsService.delete(shortcut.id).subscribe();
-
-        // Go back the modify mode
-        this.mode = 'modify';
+        // Delete the notification
+      //  this._notificationsService.delete(notification.id).subscribe();
     }
 
     /**
@@ -228,7 +178,7 @@ export class ShortcutsComponent implements OnInit, OnDestroy
             backdropClass   : 'fuse-backdrop-on-mobile',
             scrollStrategy  : this._overlay.scrollStrategies.block(),
             positionStrategy: this._overlay.position()
-                .flexibleConnectedTo(this._shortcutsOrigin._elementRef.nativeElement)
+                .flexibleConnectedTo(this._notificationsOrigin._elementRef.nativeElement)
                 .withLockedPosition(true)
                 .withPush(true)
                 .withPositions([
@@ -264,5 +214,22 @@ export class ShortcutsComponent implements OnInit, OnDestroy
         {
             this._overlayRef.detach();
         });
+    }
+
+    /**
+     * Calculate the unread count
+     *
+     * @private
+     */
+    private _calculateUnreadCount(): void
+    {
+        let count = 0;
+
+        if ( this.notifications && this.notifications.length )
+        {
+            count = this.notifications.filter(notification => !notification.read).length;
+        }
+
+        this.unreadCount = count;
     }
 }

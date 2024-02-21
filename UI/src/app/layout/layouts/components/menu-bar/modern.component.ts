@@ -12,13 +12,10 @@ import {
     FuseVerticalNavigationComponent,
 } from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
-import { LanguagesComponent } from 'app/layout/common/languages/languages.component';
-import { MessagesComponent } from 'app/layout/common/messages/messages.component';
-import { NotificationsComponent } from 'app/layout/common/notifications/notifications.component';
+import { NotificationsComponent } from 'app/layout/layouts/components/notifications/notifications.component';
 import { QuickChatComponent } from 'app/layout/common/quick-chat/quick-chat.component';
-import { SearchComponent } from 'app/layout/common/search/search.component';
-import { ShortcutsComponent } from 'app/layout/common/shortcuts/shortcuts.component';
-import { UserComponent } from 'app/layout/common/user/user.component';
+import { SearchComponent } from 'app/layout/layouts/components/search/search.component';
+import { UserComponent } from 'app/layout/layouts/components/user/user.component';
 import { Subject, takeUntil } from 'rxjs';
 import { NavigationService } from '../../services/navigation.service';
 import { defaultNavigation, horizontalNavigation } from '../../services/menu';
@@ -37,11 +34,8 @@ import { Navigation } from '../../models/navigation.types';
         FuseHorizontalNavigationComponent,
         MatButtonModule,
         MatIconModule,
-        LanguagesComponent,
         FuseFullscreenComponent,
         SearchComponent,
-        ShortcutsComponent,
-        MessagesComponent,
         NotificationsComponent,
         UserComponent,
         RouterOutlet,

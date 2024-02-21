@@ -93,47 +93,14 @@ export class AuthSignInComponent implements OnInit {
             return;
         }
 
-        // Disable the form
         this.signInForm.disable();
-
-        // Hide the alert
         this.showAlert = false;
 
-        // Sign in
-        // this._authService.signIn(this.signInForm.value).subscribe(
-        //     (res) => {
-        //         console.log(res)
-        //          const redirectURL =
-        //             this._activatedRoute.snapshot.queryParamMap.get(
-        //                 'redirectURL'
-        //             ) || '/signed-in-redirect';
-
-        //          this._router.navigateByUrl(redirectURL);
-        //     },
-        //     (response) => {
-        //          this.signInForm.enable();
-
-        //           this.signInNgForm.resetForm();
-
-        //          this.alert = {
-        //             type: 'error',
-        //             message: 'Wrong email or password',
-        //         };
-
-        //         // Show the alert
-        //         this.showAlert = true;
-        //     }
-        // );
-
         this._signInService.signIn(this.signInForm.value).subscribe(
-            (res) => {
-                console.log(res)
-                 
+            (res) => {                 
                 this._router.navigateByUrl('/home');
             },
             (response) => {
-                console.log(response)
-
                 this.signInForm.enable();
                 this.signInNgForm.resetForm();
                 this.alert = {

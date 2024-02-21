@@ -26,7 +26,7 @@ export class AuthService {
     }
 
     get userEmail(): string {
-        return localStorage.getItem('email') ?? 'sithirasenanayake@gmail.com2';
+        return localStorage.getItem('email') ?? '';
     }
 
     set userEmail(email: string) {
@@ -70,9 +70,6 @@ export class AuthService {
             switchMap((response: any) => {
                 // Store the access token in the local storage
                 this.accessToken = response.accessToken;
-
-                console.log(response.user.email)
-                this.userEmail = credentials.email;
 
                 // Set the authenticated flag to true
                 this._authenticated = true;
@@ -132,11 +129,14 @@ export class AuthService {
      * Sign out
      */
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
+
+        console.log('a')
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('email');
 
         // Set the authenticated flag to false
         this._authenticated = false;
+        console.log(this._authenticated)
 
         // Return the observable
         return of(true);

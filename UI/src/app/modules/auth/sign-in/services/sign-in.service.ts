@@ -25,37 +25,14 @@ export class SignInService {
         return localStorage.getItem('accessToken') ?? '';
     }
 
-    // Assuming UserModel has correct properties
-    set userDetails(user: UserModel) {
-        localStorage.setItem('email', user.email);
-        localStorage.setItem('avatar', user.avatar);
-        localStorage.setItem('fullName', user.fullName);
-        localStorage.setItem('fullName', user.role);
+    get userEmail(): string {
+        return localStorage.getItem('email') ?? '';
     }
 
-  
-get userDetails(): UserModel {
-    const userId = parseInt(localStorage.getItem('userId') || '0'); // Default to 0 for ID
-    const email = localStorage.getItem('email') || '';
-    const avatar = localStorage.getItem('avatar') || ''; 
-    const fullName = localStorage.getItem('fullName') || '';
-    const status = localStorage.getItem('status') || 'active'; // Default to 'active'
-    const lastSeen = localStorage.getItem('lastSeen') || ''; // Up to you if you need a default 
-    const department = localStorage.getItem('department') || ''; 
-    const role = localStorage.getItem('role') || '';
-  
-    return new UserModel(
-      userId,
-      fullName,
-      '', // We'll address password omission below
-      email,
-      status,
-      lastSeen,
-      avatar,
-      department,
-      role
-    );
-  }
+    set userEmail(email: string) {
+        console.log(email);
+        localStorage.setItem('email', email);
+    }
 
     constructor(
         private http: HttpClient,
@@ -72,6 +49,7 @@ get userDetails(): UserModel {
             .pipe(
                 switchMap((response: any) => {
                     this.accessToken = response.accessToken;
+                    this.userEmail = response.user.email;
                     this._authenticated = true;
                     this._userService.user = response.user;
                     return of(response);
@@ -80,8 +58,10 @@ get userDetails(): UserModel {
     }
 
     signOut(): Observable<any> {
-        // Remove the access token from the local storage
+
+        console.log('out')
         localStorage.removeItem('accessToken');
+        localStorage.removeItem('email');
 
         // Set the authenticated flag to false
         this._authenticated = false;

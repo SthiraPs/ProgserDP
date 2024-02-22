@@ -1,15 +1,24 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { DepartmentModel } from '../model/department.model';
 import { NotificationService } from './notification.service';
 import { RoleModel } from '../model/role.model';
 import { catchError, throwError } from 'rxjs';
+import { environment } from 'environemnts/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RoleService {
-    private apiUrl = 'http://localhost:3400/api/roles/'; // Example if your Node.js app is on port 3000
+    private baseUrl = `${environment.apiUrl}/api/roles`;
+
+    get accessToken(): string {
+        return localStorage.getItem('accessToken') ?? '';
+    }
+
+    set userEmail(email: string) {
+        localStorage.setItem('email', email);
+    }
 
     constructor(
         private http: HttpClient,
@@ -17,11 +26,13 @@ export class RoleService {
     ) {}
 
     getRoles() {
-        return this.http.get<RoleModel[]>(this.apiUrl).pipe(
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.accessToken}`,
+        });
+
+        return this.http.get<RoleModel[]>(this.baseUrl, { headers }).pipe(
             catchError((error) => {
-                // Error handling logic here
-                console.error('Error fetching users:', error);
-                return throwError(() => error); // Or a more informative error type
+                return throwError(() => error);
             })
         );
     }

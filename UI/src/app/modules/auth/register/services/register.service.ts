@@ -1,39 +1,55 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserModel } from '../model/user.model';
 import { ResponseModel } from 'app/modules/other/model/response.model';
 import { Observable, catchError, throwError } from 'rxjs';
 import { NotificationService } from 'app/modules/other/services/notification.service';
+import { environment } from 'environemnts/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RegisterService {
-    private apiUrl = 'http://localhost:3400/api/users/'; // Example if your Node.js app is on port 3000
+    private baseUrl = `${environment.apiUrl}/api/users`;
+
+    get accessToken(): string {
+        return localStorage.getItem('accessToken') ?? '';
+    }
+
+    set userEmail(email: string) {
+        localStorage.setItem('email', email);
+    }
 
     constructor(
         private http: HttpClient,
-        private _notificationService: NotificationService,
-        
+        private _notificationService: NotificationService
     ) {}
 
     getUsers() {
-      return this.http.get<UserModel[]>(this.apiUrl).pipe(
-        catchError(error => {
-          // Error handling logic here
-          console.error("Error fetching users:", error); 
-          return throwError(() => error); // Or a more informative error type
-        })
-      );
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.accessToken}`,
+        });
+
+        return this.http.get<UserModel[]>(this.baseUrl, { headers }).pipe(
+            catchError((error) => {
+                console.error('Error fetching users:', error);
+                return throwError(() => error); // Or a more informative error type
+            })
+        );
     }
 
     createUser(user: UserModel): Observable<ResponseModel> {
-        return this.http.post<ResponseModel>(this.apiUrl, user).pipe(
-            catchError((error) => {
-              console.log(error)
-                this._notificationService.showErrorMessage(error.message);
-                return throwError(() => error);
-            })
-        );
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.accessToken}`,
+        });
+
+        return this.http
+            .post<ResponseModel>(this.baseUrl, user, { headers })
+            .pipe(
+                catchError((error) => {
+                    this._notificationService.showErrorMessage(error.message);
+                    return throwError(() => error);
+                })
+            );
     }
 }

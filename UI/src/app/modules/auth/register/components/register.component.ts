@@ -82,7 +82,6 @@ export class RegisterComponent {
         private _roleService: RoleService,
         private _departmentService: DepartmentService,
         private _notificationService: NotificationService,
-        private changeDetector: ChangeDetectorRef
     ) {}
 
     ngOnInit(): void {

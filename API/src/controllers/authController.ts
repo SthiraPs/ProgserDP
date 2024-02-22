@@ -29,7 +29,7 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '30s' });
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
 
     res.json({
       user: user,
@@ -50,22 +50,11 @@ const signInWithToken = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    // Verify the token
-    if (verifyJWTToken(accessToken)) {
-      res.json({
-        user: cloneDeep(user),
-        accessToken: accessToken,
-        tokenType: 'bearer',
-      });
-    }
+    res.json({
+      user: cloneDeep(user),
+      accessToken: accessToken,
+    });
 
-    // Invalid token
-    return [
-      401,
-      {
-        error: 'Invalid token',
-      },
-    ];
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }

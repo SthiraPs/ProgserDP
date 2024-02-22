@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { ResponseModel } from 'app/modules/other/model/response.model';
 import { NotificationService } from 'app/modules/other/services/notification.service';
@@ -6,12 +6,13 @@ import { catchError, throwError, Observable, of, switchMap } from 'rxjs';
 import { UserModel } from '../../register/model/user.model';
 import { SigninModel } from '../model/signin.model';
 import { UserService } from 'app/core/user/user.service';
+import { environment } from 'environemnts/environment';
 
 @Injectable({
     providedIn: 'root',
 })
 export class SignInService {
-    private apiUrl = 'http://localhost:3400/api/sign-in/'; // Example if your Node.js app is on port 3000
+    private baseUrl = `${environment.apiUrl}/auth`;
 
     private _authenticated: boolean = false;
     private _httpClient = inject(HttpClient);
@@ -21,17 +22,16 @@ export class SignInService {
         localStorage.setItem('accessToken', token);
     }
 
+    set userEmail(email: string) {
+        localStorage.setItem('email', email);
+    }
+
     get accessToken(): string {
         return localStorage.getItem('accessToken') ?? '';
     }
 
     get userEmail(): string {
         return localStorage.getItem('email') ?? '';
-    }
-
-    set userEmail(email: string) {
-        console.log(email);
-        localStorage.setItem('email', email);
     }
 
     constructor(
@@ -45,7 +45,7 @@ export class SignInService {
         }
 
         return this._httpClient
-            .post('http://localhost:3400/auth/sign-in', credentials)
+            .post(`${this.baseUrl}/sign-in`, credentials)
             .pipe(
                 switchMap((response: any) => {
                     this.accessToken = response.accessToken;
@@ -58,41 +58,28 @@ export class SignInService {
     }
 
     signInUsingToken(): Observable<any> {
-        //Sign in using the token
+        const headers = new HttpHeaders({
+            Authorization: `Bearer ${this.accessToken}`,
+        });
+
+        const payload = {
+            accessToken: this.accessToken,
+            email: this.userEmail,
+        };
+
         return this._httpClient
-            .post('http://localhost:3400/auth/sign-in-with-token', {
-                accessToken: this.accessToken,
-                email: this.userEmail,
-            })
+            .post(`${this.baseUrl}/sign-in-with-token`, payload )
             .pipe(
-                catchError(() =>
-                    // Return false
-                    of(false)
-                ),
+                catchError(() => of(false)),
                 switchMap((response: any) => {
-                    // Replace the access token with the new one if it's available on
-                    // the response object.
-                    //
-                    // This is an added optional step for better security. Once you sign
-                    // in using the token, you should generate a new one on the server
-                    // side and attach it to the response object. Then the following
-                    // piece of code can replace the token with the refreshed one.
                     if (response.accessToken) {
                         this.accessToken = response.accessToken;
                     }
-
-                    // Set the authenticated flag to true
                     this._authenticated = true;
-
-                    // Store the user on the user service
                     this._userService.user = response.user;
-
-                    // Return true
                     return of(true);
                 })
             );
-
-        return of(true);
     }
 
     signOut(): Observable<any> {
@@ -108,18 +95,24 @@ export class SignInService {
     }
 
     forgotPassword(email: string): Observable<any> {
-        return this._httpClient.post('api/auth/forgot-password', email);
+        return this._httpClient.post(`${this.baseUrl}/forgot-password`, email);
     }
 
     resetPassword(password: string): Observable<any> {
-        return this._httpClient.post('api/auth/reset-password', password);
+        return this._httpClient.post(
+            `${this.baseUrl}/reset-password`,
+            password
+        );
     }
 
     unlockSession(credentials: {
         email: string;
         password: string;
     }): Observable<any> {
-        return this._httpClient.post('api/auth/unlock-session', credentials);
+        return this._httpClient.post(
+            `${this.baseUrl}/unlock-session`,
+            credentials
+        );
     }
 
     check(): Observable<boolean> {

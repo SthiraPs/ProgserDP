@@ -1,7 +1,5 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { AuthService } from 'app/core/auth/auth.service';
-import { AuthUtils } from 'app/core/auth/auth.utils';
 import { SignInService } from 'app/modules/auth/sign-in/services/sign-in.service';
 import { catchError, Observable, throwError } from 'rxjs';
 
@@ -28,7 +26,7 @@ export const authInterceptor = (req: HttpRequest<unknown>, next: HttpHandlerFn):
     // catch and delete the access token from the local storage while logging
     // the user out from the app.
 
-    if ( signInService.accessToken && !AuthUtils.isTokenExpired(signInService.accessToken) )
+    if ( signInService.accessToken )
     {
         newReq = req.clone({
             headers: req.headers.set('Authorization', 'Bearer ' + signInService.accessToken),

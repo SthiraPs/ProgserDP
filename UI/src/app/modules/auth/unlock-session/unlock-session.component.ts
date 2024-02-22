@@ -16,8 +16,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
 import { UserService } from 'app/core/user/user.service';
+import { SignInService } from '../sign-in/services/sign-in.service';
 
 @Component({
     selector: 'auth-unlock-session',
@@ -55,7 +55,7 @@ export class AuthUnlockSessionComponent implements OnInit {
      */
     constructor(
         private _activatedRoute: ActivatedRoute,
-        private _authService: AuthService,
+        private _signInService: SignInService,
         private _formBuilder: UntypedFormBuilder,
         private _router: Router,
         private _userService: UserService
@@ -109,7 +109,7 @@ export class AuthUnlockSessionComponent implements OnInit {
         // Hide the alert
         this.showAlert = false;
 
-        this._authService
+        this._signInService
             .unlockSession({
                 email: this._email ?? '',
                 password: this.unlockSessionForm.get('password').value,

@@ -8,6 +8,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { UserService } from 'app/core/user/user.service';
 import { User } from 'app/core/user/user.types';
+import { SignInService } from 'app/modules/auth/sign-in/services/sign-in.service';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -37,6 +38,8 @@ export class UserComponent implements OnInit, OnDestroy
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _userService: UserService,
+        private _signInService: SignInService,
+
     )
     {
     }
@@ -101,6 +104,8 @@ export class UserComponent implements OnInit, OnDestroy
      */
     signOut(): void
     {
-        this._router.navigate(['/sign-out']);
+        this._signInService.signOut();
+
+        this._router.navigate(['/sign-in']);
     }
 }

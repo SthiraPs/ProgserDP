@@ -46,7 +46,7 @@ export function generateJWTToken(email: string, role: string): string {
   // Calculate the issued at and expiration dates
   const date = new Date();
   const iat = Math.floor(date.getTime() / 1000);
-  const exp = Math.floor((date.getTime() + 60 * 60 * 1000) / 1000); // Adds one hour to the current time
+  const exp = Math.floor((date.getTime() +  6 * 1000) / 1000); // Adds one hour to the current time
 
   // Define token payload
   const payload: JwtPayload = {

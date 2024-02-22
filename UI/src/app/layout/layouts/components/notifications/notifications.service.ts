@@ -24,7 +24,7 @@ export class NotificationsService
      */
     get notifications$(): Observable<Notification[]>
     {
-        return this._notifications.asObservable();
+        return null;
     }
 
     // -----------------------------------------------------------------------------------------------------
@@ -34,15 +34,7 @@ export class NotificationsService
     /**
      * Get all notifications
      */
-    getAll(): Observable<Notification[]>
-    {
-        return this._httpClient.get<Notification[]>('api/common/notifications').pipe(
-            tap((notifications) =>
-            {
-                this._notifications.next(notifications);
-            }),
-        );
-    }
+    
 
     /**
      * Create a notification

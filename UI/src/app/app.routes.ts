@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
 import { initialDataResolver } from 'app/app.resolvers';
-import { AuthGuard } from 'app/core/auth/guards/auth.guard';
-import { NoAuthGuard } from 'app/core/auth/guards/noAuth.guard';
+import { AuthGuard } from 'app/modules/auth/sign-in/services/guards/auth.guard';
+import { NoAuthGuard } from 'app/modules/auth/sign-in/services/guards/noAuth.guard';
 import { LayoutComponent } from 'app/layout/layouts/components/main-layout.ts/layout.component';
 
 export const appRoutes: Route[] = [
@@ -37,7 +37,6 @@ export const appRoutes: Route[] = [
             layout: 'empty'
         },
         children: [
-            {path: 'sign-out', loadChildren: () => import('app/modules/auth/sign-out/sign-out.routes')},
             {path: 'unlock-session', loadChildren: () => import('app/modules/auth/unlock-session/unlock-session.routes')}
         ]
     },

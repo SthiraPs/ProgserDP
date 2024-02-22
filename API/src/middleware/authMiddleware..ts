@@ -1,21 +1,16 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction } from 'express';
 
-const jwt = require("jsonwebtoken");
+const authenticateToken(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
 
-module.exports = (req:Request, res:Response, next:NextFunction) => {
-  const authHeader = req.headers.authorization;
+  if (token == null) return res.sendStatus(401);
 
-  if (!authHeader) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
-  const token = authHeader.split(" ")[1];
-
-  try {
-    const decoded = jwt.verify(token, 'JWT_SECRET');
-    req.user = decoded; // Attach user data to the request object
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
     next();
-  } catch (error) {
-    res.status(401).json({ error: "Invalid token" });
-  }
-};
+  });
+}
+
+export default { authenticateToken }; // Add more controller functions  

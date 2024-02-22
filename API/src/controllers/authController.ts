@@ -1,13 +1,16 @@
-import User from "../models/user";
-import { Request, Response, NextFunction } from "express";
-import { generateJWTToken, verifyJWTToken } from "../utils/generatToken";
+import User from '../models/user';
+import { Request, Response, NextFunction } from 'express';
+import { generateJWTToken, verifyJWTToken } from '../utils/generatToken';
+import * as dotenv from 'dotenv';
 
-const express = require("express");
-const cloneDeep = require("lodash/cloneDeep");
+dotenv.config();
+
+const express = require('express');
+const cloneDeep = require('lodash/cloneDeep');
 const router = express.Router();
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcryptjs"); // For password hashing
-const JWT_SECRET = "your_strong_secret_key";
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs'); // For password hashing
+const JWT_SECRET = process.env.JWT_SECRET || '';
 
 const signIn = async (req: Request, res: Response) => {
   try {
@@ -16,27 +19,24 @@ const signIn = async (req: Request, res: Response) => {
     // Find user
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ error: "Invapi/common/naviid credentials" });
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
 
     // Compare password with hash
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
-      return res.status(400).json({ error: "Invalid credentials" });
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    console.log(process.env.JWT_SECRET)
-    // Generate JWT
-    //const token = generateJWTToken(user.email, user.role);
-    const accessToken = jwt.sign({ email: user.email }, JWT_SECRET, { expiresIn: '1h' });
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '30s' });
 
     res.json({
       user: user,
       accessToken: accessToken,
     });
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 
@@ -47,16 +47,15 @@ const signInWithToken = async (req: Request, res: Response) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ error: "Invalid credentials" });
+      return res.status(400).json({ error: 'Invalid credentials' });
     }
-
 
     // Verify the token
     if (verifyJWTToken(accessToken)) {
       res.json({
         user: cloneDeep(user),
         accessToken: accessToken,
-        tokenType: "bearer",
+        tokenType: 'bearer',
       });
     }
 
@@ -64,11 +63,11 @@ const signInWithToken = async (req: Request, res: Response) => {
     return [
       401,
       {
-        error: "Invalid token",
+        error: 'Invalid token',
       },
     ];
   } catch (error) {
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: 'Server error' });
   }
 };
 

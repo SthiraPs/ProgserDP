@@ -1,9 +1,10 @@
 import { Router } from 'express';
 import authController from '../controllers/authController';
+import authenticateToken from '../middleware/authMiddleware.';
 
 const router = Router();
 
 router.post('/sign-in', authController.signIn);
-router.post('/sign-in-with-token', authController.signInWithToken);
+router.post('/sign-in-with-token', authenticateToken, authController.signInWithToken);
 
 export default router;

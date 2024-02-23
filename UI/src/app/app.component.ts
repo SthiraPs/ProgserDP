@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { RouterOutlet } from '@angular/router';
 import { SignInService } from './modules/auth/sign-in/services/sign-in.service';
+import { SignInPopupComponent } from './modules/auth/sign-in/components/sign-in-popup/sign-in-popup.component';
 
 @Component({
     selector: 'app-root',
@@ -17,7 +18,10 @@ export class AppComponent {
     private inactivityThreshold = 1 * 60 * 1000; // 5 minutes in milliseconds
     private inactivityTimer;
 
-    constructor(private _signInService: SignInService) {
+    constructor(
+        private _signInService: SignInService,
+        private _matDialog: MatDialog
+    ) {
         this.startActivityListener();
     }
 
@@ -43,20 +47,24 @@ export class AppComponent {
     }
 
     markUserOffline() {
-        this._signInService.markUserOffline().subscribe((res) => {});
+        const email = localStorage.getItem('email');
+        if (email !== null && email !== '') {
+            const dialogRef = this._matDialog.open(SignInPopupComponent);
+
+            this._signInService.markUserOffline().subscribe((res) => {});
+        }
     }
 
     refreshTokenIfNeeded() {
         const token = localStorage.getItem('accessToken');
-        const expiration = this.getTokenExpirationDate(token);
+        const refreshTime = new Date().getTime() + this.tokenRefreshThreshold;
+        const expirationTime = this.getTokenExpirationDate(token);
 
-        console.log(new Date().getTime() + this.tokenRefreshThreshold);
-        console.log(expiration.getTime());
-        if (
-            new Date().getTime() + this.tokenRefreshThreshold >
-            expiration.getTime()
-        ) {
-            this._signInService.signInUsingToken().subscribe((res) => {});
+        console.log(expirationTime);
+        if (expirationTime !== null) {
+            if (refreshTime > expirationTime.getTime()) {
+                this._signInService.signInUsingToken().subscribe((res) => {});
+            }
         }
     }
 

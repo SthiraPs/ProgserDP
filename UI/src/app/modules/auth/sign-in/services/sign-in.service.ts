@@ -87,10 +87,13 @@ export class SignInService {
             );
     }
 
-    signOut(): Observable<any> {
+    async signOut(): Promise<Observable<any>> {
+        await this.markUserOffline().subscribe((res) => {});
+
         localStorage.removeItem('accessToken');
         localStorage.removeItem('email');
         this._authenticated = false;
+
         return of(true);
     }
 
@@ -140,7 +143,7 @@ export class SignInService {
         const payload = {
             email: this.userEmail,
         };
-        
+
         return this._httpClient
             .post(`${this.baseUrl}/mark-user-offline`, payload)
             .pipe(

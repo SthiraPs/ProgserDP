@@ -29,7 +29,7 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5m' });
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '2m' });
 
     user.status = 'Online';
     user.lastSeen = 'Now'; 
@@ -54,7 +54,7 @@ const signInWithToken = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5m' });
+    const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '2m' });
 
     user.status = 'Online';
     user.lastSeen = 'Now'; 
@@ -80,9 +80,9 @@ const markUserOffline = async (req: Request, res: Response) => {
         user.status = 'Away';
         user.lastSeen = (new Date()).toString(); 
     
-        console.log(user)
         await user.save();
     
+        console.log('Away')
         res.json({
             status: 'Success',
             message: 'You are now marked as offline!',

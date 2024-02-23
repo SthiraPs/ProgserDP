@@ -26,7 +26,6 @@ export class UserService
 
     get user$(): Observable<User>
     {
-        console.log(this._user.asObservable())
         return this._user.asObservable();
     }
 

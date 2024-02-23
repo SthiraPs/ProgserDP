@@ -7,8 +7,20 @@ import { Subject } from 'rxjs';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { NgIf, NgFor, NgClass, TitleCasePipe, DatePipe } from '@angular/common';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDragPreview, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragDrop,
+    CdkDragHandle,
+    CdkDragPreview,
+    CdkDropList,
+    moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
+import { DepartmentService } from 'app/modules/other/services/department.service';
+import { DepartmentModel } from 'app/modules/other/model/department.model';
+import { SignInService } from 'app/modules/auth/sign-in/services/sign-in.service';
+import { MatDialog } from '@angular/material/dialog';
+import { SignInPopupComponent } from 'app/modules/auth/sign-in/components/sign-in-popup/sign-in-popup.component';
 
 @Component({
     selector: 'landing-home',
@@ -36,6 +48,7 @@ import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 export class LandingHomeComponent {
     data: any;
     accountBalanceOptions: ApexOptions;
+
     recentTransactionsDataSource: MatTableDataSource<any> =
         new MatTableDataSource();
     recentTransactionsTableColumns: string[] = [
@@ -48,7 +61,18 @@ export class LandingHomeComponent {
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    constructor(private _router: Router) {}
+    constructor(
+        private _router: Router,
+        private _departmentService: DepartmentService,
+        private _signInService: SignInService,
+        private _matDialog: MatDialog,
+
+    ) {
+    }
+
+    ngOnInit(): void {
+        this.loadDepartments();
+    }
 
     private _prepareChartData(): void {
         // Account balance
@@ -96,12 +120,13 @@ export class LandingHomeComponent {
         };
     }
 
-    /**
-     * Create task
-     *
-     * @param type
-     */
     createTask(type: 'task' | 'section'): void {
         // Create the task
+    }
+
+    loadDepartments() {
+        this._departmentService
+            .getDepartments()
+            .subscribe((res: DepartmentModel[]) => {});
     }
 }

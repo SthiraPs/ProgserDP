@@ -6,6 +6,8 @@ import { ResponseModel } from '../model/response.model';
 import { NotificationService } from './notification.service';
 import { DepartmentModel } from '../model/department.model';
 import { environment } from 'environemnts/environment';
+import { SignInPopupComponent } from 'app/modules/auth/sign-in/components/sign-in-popup/sign-in-popup.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Injectable({
     providedIn: 'root',
@@ -23,16 +25,21 @@ export class DepartmentService {
 
     constructor(
         private http: HttpClient,
-        private _notificationService: NotificationService
+        private _notificationService: NotificationService,
+        private _matDialog: MatDialog,
     ) {}
 
     getDepartments() {
         const headers = new HttpHeaders({
             Authorization: `Bearer ${this.accessToken}`,
         });
-        
-        return this.http.get<DepartmentModel[]>(this.baseUrl ).pipe(
+
+        return this.http.get<DepartmentModel[]>(this.baseUrl).pipe(
             catchError((error) => {
+                localStorage.removeItem('accessToken');
+                localStorage.removeItem('email');
+                const dialogRef = this._matDialog.open(SignInPopupComponent);
+
                 return throwError(() => error);
             })
         );

@@ -29,7 +29,11 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1h' });
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5m' });
+
+    user.status = 'Online';
+    user.lastSeen = 'Now'; 
+    await user.save();
 
     res.json({
       user: user,
@@ -50,9 +54,15 @@ const signInWithToken = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
+    const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '5m' });
+
+    user.status = 'Online';
+    user.lastSeen = 'Now'; 
+    await user.save();
+
     res.json({
       user: cloneDeep(user),
-      accessToken: accessToken,
+      accessToken: newToken,
     });
 
   } catch (error) {
@@ -60,4 +70,34 @@ const signInWithToken = async (req: Request, res: Response) => {
   }
 };
 
-export default { signIn, signInWithToken }; // Add more controller functions
+const markUserOffline = async (req: Request, res: Response) => {
+  try {
+    const email = req.body.email;
+    const user = await User.findOne({ email: email });
+
+    if (user) {
+        // Update the status and lastSeen fields
+        user.status = 'Away';
+        user.lastSeen = (new Date()).toString(); 
+    
+        console.log(user)
+        await user.save();
+    
+        res.json({
+            status: 'Success',
+            message: 'You are now marked as offline!',
+        });
+    } else {
+        // User not found
+        res.status(404).json({
+            status: 'Fail',
+            message: 'User not found!',
+        });
+    }
+
+  } catch (error) {
+    res.status(500).json({ error: error });
+  }
+};
+
+export default { signIn, signInWithToken, markUserOffline }; // Add more controller functions

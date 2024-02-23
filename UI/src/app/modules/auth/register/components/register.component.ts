@@ -119,7 +119,6 @@ export class RegisterComponent {
             .getDepartments()
             .subscribe((res: DepartmentModel[]) => {
                 this.departmentsList = res;
-                console.log(this.departmentsList);
             });
     }
 

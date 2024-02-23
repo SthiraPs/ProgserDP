@@ -19,6 +19,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { DashboardService } from '../service/dashboard.service';
 import { User } from 'app/core/user/user.types';
+import { DepartmentModel } from 'app/modules/other/model/department.model';
+import { DepartmentService } from 'app/modules/other/services/department.service';
+import { SignInService } from 'app/modules/auth/sign-in/services/sign-in.service';
 
 export type ChartOptions = {
     series: ApexAxisChartSeries;
@@ -69,7 +72,8 @@ export class DashboardComponent {
 
     constructor(
         private _dashboardService: DashboardService,
-        private _router: Router
+        private _router: Router,
+        private _departmentService: DepartmentService
     ) {}
 
     ngOnInit(): void {
@@ -77,6 +81,8 @@ export class DashboardComponent {
         this.loadChartTwo();
         this.loadChartThree();
         this.loadChartFour();
+
+        this.loadDepartments();
     }
 
     loadChartOne() {
@@ -246,5 +252,11 @@ export class DashboardComponent {
 
     trackByFn(index: number, item: any): any {
         return item.id || index;
+    }
+
+    loadDepartments() {
+        this._departmentService
+            .getDepartments()
+            .subscribe((res: DepartmentModel[]) => {});
     }
 }

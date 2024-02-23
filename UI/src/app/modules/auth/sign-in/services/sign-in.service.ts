@@ -7,6 +7,8 @@ import { UserModel } from '../../register/model/user.model';
 import { SigninModel } from '../model/signin.model';
 import { UserService } from 'app/core/user/user.service';
 import { environment } from 'environemnts/environment';
+import { MatDialog } from '@angular/material/dialog';
+import { SignInPopupComponent } from '../components/sign-in-popup/sign-in-popup.component';
 
 @Injectable({
     providedIn: 'root',
@@ -36,14 +38,11 @@ export class SignInService {
 
     constructor(
         private http: HttpClient,
-        private _notificationService: NotificationService
+        private _notificationService: NotificationService,
+        private _matDialog: MatDialog
     ) {}
 
     signIn(credentials: { email: string; password: string }): Observable<any> {
-        if (this._authenticated) {
-            return throwError('User is already logged in.');
-        }
-
         return this._httpClient
             .post(`${this.baseUrl}/sign-in`, credentials)
             .pipe(
@@ -68,9 +67,15 @@ export class SignInService {
         };
 
         return this._httpClient
-            .post(`${this.baseUrl}/sign-in-with-token`, payload )
+            .post(`${this.baseUrl}/sign-in-with-token`, payload)
             .pipe(
-                catchError(() => of(false)),
+                catchError((error) => {
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('email');
+                    this._matDialog.open(SignInPopupComponent);
+
+                    return throwError(() => error);
+                }),
                 switchMap((response: any) => {
                     if (response.accessToken) {
                         this.accessToken = response.accessToken;
@@ -83,14 +88,9 @@ export class SignInService {
     }
 
     signOut(): Observable<any> {
-        console.log('out');
         localStorage.removeItem('accessToken');
         localStorage.removeItem('email');
-
-        // Set the authenticated flag to false
         this._authenticated = false;
-
-        // Return the observable
         return of(true);
     }
 
@@ -134,5 +134,31 @@ export class SignInService {
 
         // If the access token exists, and it didn't expire, sign in using it
         return this.signInUsingToken();
+    }
+
+    markUserOffline() {
+        const payload = {
+            email: this.userEmail,
+        };
+        
+        return this._httpClient
+            .post(`${this.baseUrl}/mark-user-offline`, payload)
+            .pipe(
+                catchError((error) => {
+                    localStorage.removeItem('accessToken');
+                    localStorage.removeItem('email');
+                    this._matDialog.open(SignInPopupComponent);
+
+                    return throwError(() => error);
+                }),
+                switchMap((response: any) => {
+                    if (response.accessToken) {
+                        this.accessToken = response.accessToken;
+                    }
+                    this._authenticated = true;
+                    this._userService.user = response.user;
+                    return of(true);
+                })
+            );
     }
 }

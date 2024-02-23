@@ -6,6 +6,8 @@ export interface IUser extends Document {
   password: string;
   department: string;
   role: string;
+  status: string;
+  lastSeen: string;
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -29,6 +31,16 @@ const userSchema: Schema = new mongoose.Schema({
     unique: false,
   },
   role: {
+    type: String,
+    required: true,
+    unique: false,
+  },
+  status: {
+    type: String,
+    required: true,
+    unique: false,
+  },
+  lastSeen: {
     type: String,
     required: true,
     unique: false,

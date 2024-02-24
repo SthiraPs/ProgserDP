@@ -13,9 +13,9 @@ import {
 } from '@fuse/components/navigation';
 import { FuseMediaWatcherService } from '@fuse/services/media-watcher';
 import { NotificationsComponent } from 'app/layout/layouts/components/notifications/notifications.component';
-import { QuickChatComponent } from 'app/layout/common/quick-chat/quick-chat.component';
+import { QuickChatComponent } from 'app/layout/layouts/components/user/components/quick-chat/quick-chat.component';
 import { SearchComponent } from 'app/layout/layouts/components/search/search.component';
-import { UserComponent } from 'app/layout/layouts/components/user/user.component';
+import { UserComponent } from 'app/layout/layouts/components/user/components/users/user.component';
 import { Subject, takeUntil } from 'rxjs';
 import { NavigationService } from '../../services/navigation.service';
 import { defaultNavigation, horizontalNavigation } from '../../services/menu';

@@ -18,7 +18,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { Router } from '@angular/router';
 import { DashboardService } from '../service/dashboard.service';
-import { User } from 'app/core/user/user.types';
+import { User } from 'app/layout/layouts/components/user/services/user.types';
 import { DepartmentModel } from 'app/modules/other/model/department.model';
 import { DepartmentService } from 'app/modules/other/services/department.service';
 import { SignInService } from 'app/modules/auth/sign-in/services/sign-in.service';

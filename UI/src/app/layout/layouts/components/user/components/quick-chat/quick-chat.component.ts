@@ -7,8 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { FuseScrollbarDirective } from '@fuse/directives/scrollbar';
-import { QuickChatService } from 'app/layout/common/quick-chat/quick-chat.service';
-import { Chat } from 'app/layout/common/quick-chat/quick-chat.types';
+import { QuickChatService } from 'app/layout/layouts/components/user/services/quick-chat.service';
+import { UserModel } from 'app/modules/auth/register/model/user.model';
 import { Subject, takeUntil } from 'rxjs';
 
 @Component({
@@ -23,10 +23,10 @@ import { Subject, takeUntil } from 'rxjs';
 export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
 {
     @ViewChild('messageInput') messageInput: ElementRef;
-    chat: Chat;
-    chats: Chat[];
+    chat: UserModel;
+    chats: UserModel[];
     opened: boolean = false;
-    selectedChat: Chat;
+    selectedChat: UserModel;
     private _mutationObserver: MutationObserver;
     private _scrollStrategy: ScrollStrategy = this._scrollStrategyOptions.block();
     private _overlay: HTMLElement;
@@ -46,13 +46,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Decorated methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Host binding for component classes
-     */
     @HostBinding('class') get classList(): any
     {
         return {
@@ -60,11 +53,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         };
     }
 
-    /**
-     * Resize on 'input' and 'ngModelChange' events
-     *
-     * @private
-     */
     @HostListener('input')
     @HostListener('ngModelChange')
     private _resizeMessageInput(): void
@@ -83,27 +71,21 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         });
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
     ngOnInit(): void
     {
         // Chat
         this._quickChatService.chat$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((chat: Chat) =>
+            .subscribe((chat: UserModel) =>
             {
+                console.log('chat' + chat);
                 this.chat = chat;
             });
 
         // Chats
         this._quickChatService.chats$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((chats: Chat[]) =>
+            .subscribe((chats: UserModel[]) =>
             {
                 this.chats = chats;
             });
@@ -111,15 +93,13 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         // Selected chat
         this._quickChatService.chat$
             .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((chat: Chat) =>
+            .subscribe((chat: UserModel) =>
             {
                 this.selectedChat = chat;
             });
     }
 
-    /**
-     * After view init
-     */
+
     ngAfterViewInit(): void
     {
         // Fix for Firefox.
@@ -185,9 +165,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         this._toggleOpened(true);
     }
 
-    /**
-     * Close the panel
-     */
     close(): void
     {
         // Return if the panel has already closed
@@ -200,9 +177,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy
         this._toggleOpened(false);
     }
 
-    /**
-     * Toggle the panel
-     */
     toggle(): void
     {
         if ( this.opened )

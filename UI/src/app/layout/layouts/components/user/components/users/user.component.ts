@@ -8,14 +8,16 @@ import {
     OnDestroy,
     OnInit,
     ViewEncapsulation,
+    inject,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
-import { UserService } from 'app/core/user/user.service';
-import { User } from 'app/core/user/user.types';
+import { UserService } from 'app/layout/layouts/components/user/services/user.service';
+import { User } from 'app/layout/layouts/components/user/services/user.types';
+import { GravatarService } from 'app/modules/auth/register/services/gravatar.service';
 import { SignInService } from 'app/modules/auth/sign-in/services/sign-in.service';
 import { Subject, takeUntil } from 'rxjs';
 
@@ -36,38 +38,39 @@ import { Subject, takeUntil } from 'rxjs';
     ],
 })
 export class UserComponent implements OnInit, OnDestroy {
-    /* eslint-disable @typescript-eslint/naming-convention */
     static ngAcceptInputType_showAvatar: BooleanInput;
-    /* eslint-enable @typescript-eslint/naming-convention */
+    private _userService = inject(UserService);
 
     @Input() showAvatar: boolean = true;
     user: User;
 
     private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-    /**
-     * Constructor
-     */
     constructor(
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
-        private _userService: UserService,
-        private _signInService: SignInService
+        private _signInService: SignInService,
+        private _gravatarService: GravatarService
     ) {}
 
-    ngOnInit(): void {
-        // Subscribe to user changes
-        this._userService.user$
+    async ngOnInit(): Promise<void> {
+        await this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
-                this.user = user;
-                if (this.user == null) {
+                console.log('user' + user);
+                if (user == null) {
                     this.showAvatar = false;
-                    this.user.status = 'away';
-                    this.user.email = 'Loged out';
-                }
+                } else {
+                    this.showAvatar = true;
 
-                // Mark for check
+                    this.user = user;
+                    this.user = {
+                        ...user,
+                        avatar: this._gravatarService.generateGravatarUrl(
+                            user.email
+                        ),
+                    };
+                }
                 this._changeDetectorRef.markForCheck();
             });
     }

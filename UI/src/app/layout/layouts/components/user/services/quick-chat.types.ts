@@ -1,4 +1,4 @@
-export interface Chat
+export interface UserModelChat
 {
     id?: string;
     contactId?: string;

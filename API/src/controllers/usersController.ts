@@ -32,6 +32,8 @@ const createUser = async (req: Request, res: Response) => {
     const newUser = new User(req.body);
     const hashedPassword = await bcrypt.hash(newUser.password, 10); // 10 is the salt rounds
     newUser.password = hashedPassword;
+    newUser.status = 'Offline';
+    newUser.lastSeen = 'Now';
 
     const savedUser = await newUser.save();
     res.status(201).json({

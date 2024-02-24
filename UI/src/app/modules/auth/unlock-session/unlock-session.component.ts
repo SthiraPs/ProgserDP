@@ -16,7 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { UserService } from 'app/core/user/user.service';
+import { UserService } from 'app/layout/layouts/components/user/services/user.service';
 import { SignInService } from '../sign-in/services/sign-in.service';
 
 @Component({

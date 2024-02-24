@@ -10,7 +10,6 @@ import { firstValueFrom } from 'rxjs';
 import { appRoutes } from 'app/app.routes';
 import { provideAuth } from 'app/modules/auth/sign-in/services/auth.provider';
 import { provideIcons } from 'app/core/icons/icons.provider';
-import { TranslocoHttpLoader } from './core/transloco/transloco.http-loader';
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -59,7 +58,6 @@ export const appConfig: ApplicationConfig = {
                 reRenderOnLangChange: true,
                 prodMode            : true,
             },
-            loader: TranslocoHttpLoader,
         }),
         {
             // Preload the default language before the app starts to prevent empty/jumping content

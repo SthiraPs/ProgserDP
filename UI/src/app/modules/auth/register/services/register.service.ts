@@ -21,7 +21,7 @@ export class RegisterService {
     }
 
     constructor(
-        private http: HttpClient,
+        private _http: HttpClient,
         private _notificationService: NotificationService
     ) {}
 
@@ -30,7 +30,7 @@ export class RegisterService {
             Authorization: `Bearer ${this.accessToken}`,
         });
 
-        return this.http.get<UserModel[]>(this.baseUrl, { headers }).pipe(
+        return this._http.get<UserModel[]>(this.baseUrl, { headers }).pipe(
             catchError((error) => {
                 console.error('Error fetching users:', error);
                 return throwError(() => error); // Or a more informative error type
@@ -43,7 +43,7 @@ export class RegisterService {
             Authorization: `Bearer ${this.accessToken}`,
         });
 
-        return this.http
+        return this._http
             .post<ResponseModel>(this.baseUrl, user, { headers })
             .pipe(
                 catchError((error) => {

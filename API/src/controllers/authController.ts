@@ -29,10 +29,10 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '2m' });
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
 
     user.status = 'Online';
-    user.lastSeen = 'Now'; 
+    user.lastSeen = 'Now';
     await user.save();
 
     res.json({
@@ -54,17 +54,17 @@ const signInWithToken = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '2m' });
+    const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
 
     user.status = 'Online';
-    user.lastSeen = 'Now'; 
+    user.lastSeen = 'Now';
+
     await user.save();
 
     res.json({
       user: cloneDeep(user),
       accessToken: newToken,
     });
-
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
@@ -76,25 +76,22 @@ const markUserOffline = async (req: Request, res: Response) => {
     const user = await User.findOne({ email: email });
 
     if (user) {
-        // Update the status and lastSeen fields
-        user.status = 'Away';
-        user.lastSeen = (new Date()).toString(); 
-    
-        await user.save();
-    
-        console.log('Away')
-        res.json({
-            status: 'Success',
-            message: 'You are now marked as offline!',
-        });
-    } else {
-        // User not found
-        res.status(404).json({
-            status: 'Fail',
-            message: 'User not found!',
-        });
-    }
+      // Update the status and lastSeen fields
+      user.status = 'Away';
+      user.lastSeen = new Date().toString();
 
+      await user.save();
+      res.json({
+        status: 'Success',
+        message: 'You are now marked as offline!',
+      });
+    } else {
+      // User not found
+      res.status(404).json({
+        status: 'Fail',
+        message: 'User not found!',
+      });
+    }
   } catch (error) {
     res.status(500).json({ error: error });
   }

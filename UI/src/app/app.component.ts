@@ -12,7 +12,7 @@ import { SignInPopupComponent } from './modules/auth/sign-in/components/sign-in-
     imports: [RouterOutlet],
 })
 export class AppComponent {
-    private tokenRefreshThreshold = 60000;
+    private tokenRefreshThreshold = 30000;
     private userActivityTimer;
 
     private inactivityThreshold = 1 * 60 * 1000; // 5 minutes in milliseconds

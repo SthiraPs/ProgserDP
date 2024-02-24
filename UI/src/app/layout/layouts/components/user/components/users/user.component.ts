@@ -50,26 +50,18 @@ export class UserComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _signInService: SignInService,
-        private _gravatarService: GravatarService
     ) {}
 
     async ngOnInit(): Promise<void> {
         await this._userService.user$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe((user: User) => {
-                console.log('user' + user);
                 if (user == null) {
                     this.showAvatar = false;
                 } else {
                     this.showAvatar = true;
 
                     this.user = user;
-                    this.user = {
-                        ...user,
-                        avatar: this._gravatarService.generateGravatarUrl(
-                            user.email
-                        ),
-                    };
                 }
                 this._changeDetectorRef.markForCheck();
             });
@@ -82,7 +74,6 @@ export class UserComponent implements OnInit, OnDestroy {
     }
 
     updateUserStatus(status: string): void {
-        console.log(status);
         if (!this.user) {
             return;
         }

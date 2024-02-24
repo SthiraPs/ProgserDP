@@ -1,6 +1,7 @@
-import { Request, Response } from "express";
-import User from "../models/user";
-const bcrypt = require('bcryptjs');  
+import { Request, Response } from 'express';
+import User from '../models/user';
+import { generateGravatarUrl } from '../utils/generateGravatar';
+const bcrypt = require('bcryptjs');
 
 // Get all users
 const getUsers = async (req: Request, res: Response) => {
@@ -8,7 +9,7 @@ const getUsers = async (req: Request, res: Response) => {
     const users = await User.find();
     res.json(users);
   } catch (error) {
-    res.status(500).json({ message: "Server Error" });
+    res.status(500).json({ message: 'Server Error' });
   }
 };
 
@@ -17,33 +18,34 @@ const getUserById = async (req: Request, res: Response) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
 // Create a new user
 const createUser = async (req: Request, res: Response) => {
   try {
-
     const newUser = new User(req.body);
     const hashedPassword = await bcrypt.hash(newUser.password, 10); // 10 is the salt rounds
     newUser.password = hashedPassword;
     newUser.status = 'Offline';
-    newUser.lastSeen = 'Now';
+    newUser.lastSeen = new Date().toString();
+    
+    newUser.avatar = (await generateGravatarUrl(newUser.email)).toString();
 
     const savedUser = await newUser.save();
     res.status(201).json({
       success: true,
-      message: "User created successfully!",
-    }); // 201 status for 'created'
+      message: 'User created successfully!',
+    });
   } catch (error) {
     res.status(400).json({
       success: false,
-      message: "Error creating user",
+      message: 'Error creating user',
       error: error,
     }); // Or a more specific error based on validation
   }
@@ -57,11 +59,11 @@ const updateUser = async (req: Request, res: Response) => {
     });
 
     if (!user) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
     res.json(user);
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 
@@ -70,11 +72,11 @@ const deleteUser = async (req: Request, res: Response) => {
   try {
     const deletedUser = await User.findByIdAndDelete(req.params.id);
     if (!deletedUser) {
-      return res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: 'User not found' });
     }
-    res.json({ message: "User deleted" });
+    res.json({ message: 'User deleted' });
   } catch (error) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: 'Server error' });
   }
 };
 

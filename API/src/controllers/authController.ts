@@ -22,7 +22,6 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    // Compare password with hash
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (!isPasswordValid) {
@@ -32,8 +31,13 @@ const signIn = async (req: Request, res: Response) => {
     const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
 
     user.status = 'Online';
-    user.lastSeen = 'Now';
+    user.lastSeen = new Date().toString();
     await user.save();
+
+    const io = req.app.get('io');
+    const onlineUsers = await getOnlineUsers(user.email);
+
+    io.emit('online-users', onlineUsers);
 
     res.json({
       user: user,
@@ -46,7 +50,6 @@ const signIn = async (req: Request, res: Response) => {
 
 const signInWithToken = async (req: Request, res: Response) => {
   try {
-    const accessToken = req.body.accessToken;
     const email = req.body.email;
     const user = await User.findOne({ email });
 
@@ -57,9 +60,13 @@ const signInWithToken = async (req: Request, res: Response) => {
     const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
 
     user.status = 'Online';
-    user.lastSeen = 'Now';
+    user.lastSeen = new Date().toString();
 
     await user.save();
+
+    const io = req.app.get('io');
+    const onlineUsers = await getOnlineUsers(user.email);
+    io.emit('online-users', onlineUsers);
 
     res.json({
       user: cloneDeep(user),
@@ -76,17 +83,20 @@ const markUserOffline = async (req: Request, res: Response) => {
     const user = await User.findOne({ email: email });
 
     if (user) {
-      // Update the status and lastSeen fields
       user.status = 'Away';
       user.lastSeen = new Date().toString();
 
       await user.save();
+
+      const io = req.app.get('io');
+      const onlineUsers = await getOnlineUsers(user.email);
+      io.emit('online-users', onlineUsers);
+
       res.json({
         status: 'Success',
         message: 'You are now marked as offline!',
       });
     } else {
-      // User not found
       res.status(404).json({
         status: 'Fail',
         message: 'User not found!',
@@ -97,4 +107,8 @@ const markUserOffline = async (req: Request, res: Response) => {
   }
 };
 
-export default { signIn, signInWithToken, markUserOffline }; // Add more controller functions
+const getOnlineUsers = async (email: string) => {
+  return await User.find().sort({ lastSeen: -1 });
+};
+
+export default { signIn, signInWithToken, markUserOffline };

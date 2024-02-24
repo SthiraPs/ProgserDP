@@ -8,6 +8,7 @@ export interface IUser extends Document {
   role: string;
   status: string;
   lastSeen: string;
+  avatar: string;
 }
 
 const userSchema: Schema = new mongoose.Schema({
@@ -43,6 +44,11 @@ const userSchema: Schema = new mongoose.Schema({
   lastSeen: {
     type: String,
     required: true,
+    unique: false,
+  },
+  avatar: {
+    type: String,
+    required: false,
     unique: false,
   },
 });

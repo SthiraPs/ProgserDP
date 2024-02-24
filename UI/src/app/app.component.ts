@@ -60,7 +60,6 @@ export class AppComponent {
         const refreshTime = new Date().getTime() + this.tokenRefreshThreshold;
         const expirationTime = this.getTokenExpirationDate(token);
 
-        console.log(expirationTime);
         if (expirationTime !== null) {
             if (refreshTime > expirationTime.getTime()) {
                 this._signInService.signInUsingToken().subscribe((res) => {});

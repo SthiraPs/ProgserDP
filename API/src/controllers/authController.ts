@@ -30,12 +30,14 @@ const signIn = async (req: Request, res: Response) => {
 
     const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
 
-    user.status = 'Online';
-    user.lastSeen = new Date().toString();
-    await user.save();
+    if (user.status !== 'Invisible') {
+      user.status = 'Online';
+      user.lastSeen = new Date().toString();
+      await user.save();
+    }
 
     const io = req.app.get('io');
-    const onlineUsers = await getOnlineUsers(user.email);
+    const onlineUsers = await getOnlineUsers();
 
     io.emit('online-users', onlineUsers);
 
@@ -59,13 +61,14 @@ const signInWithToken = async (req: Request, res: Response) => {
 
     const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
 
-    user.status = 'Online';
-    user.lastSeen = new Date().toString();
-
-    await user.save();
+    if (user.status !== 'Invisible') {
+      user.status = 'Online';
+      user.lastSeen = new Date().toString();
+      await user.save();
+    }
 
     const io = req.app.get('io');
-    const onlineUsers = await getOnlineUsers(user.email);
+    const onlineUsers = await getOnlineUsers();
     io.emit('online-users', onlineUsers);
 
     res.json({
@@ -83,13 +86,14 @@ const markUserOffline = async (req: Request, res: Response) => {
     const user = await User.findOne({ email: email });
 
     if (user) {
-      user.status = 'Away';
-      user.lastSeen = new Date().toString();
-
-      await user.save();
+      if (user.status !== 'Invisible') {
+        user.status = 'Away';
+        user.lastSeen = new Date().toString();
+        await user.save();
+      }
 
       const io = req.app.get('io');
-      const onlineUsers = await getOnlineUsers(user.email);
+      const onlineUsers = await getOnlineUsers();
       io.emit('online-users', onlineUsers);
 
       res.json({
@@ -107,7 +111,7 @@ const markUserOffline = async (req: Request, res: Response) => {
   }
 };
 
-const getOnlineUsers = async (email: string) => {
+const getOnlineUsers = async () => {
   return await User.find().sort({ lastSeen: -1 });
 };
 

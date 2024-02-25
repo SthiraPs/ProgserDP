@@ -50,6 +50,7 @@ export class UserComponent implements OnInit, OnDestroy {
         private _changeDetectorRef: ChangeDetectorRef,
         private _router: Router,
         private _signInService: SignInService,
+        private _gravatarService: GravatarService
     ) {}
 
     async ngOnInit(): Promise<void> {
@@ -77,14 +78,10 @@ export class UserComponent implements OnInit, OnDestroy {
         if (!this.user) {
             return;
         }
+        this.user.status = status;
 
         // Update the user
-        this._userService
-            .update({
-                ...this.user,
-                status,
-            })
-            .subscribe();
+        this._userService.update(this.user).subscribe();
     }
 
     signOut(): void {

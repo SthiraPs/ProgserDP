@@ -6,7 +6,7 @@ const bcrypt = require('bcryptjs');
 // Get all users
 const getUsers = async (req: Request, res: Response) => {
   try {
-    const users = await User.find();
+    const users = await User.find().sort({ lastSeen: -1 });
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Server Error' });
@@ -34,7 +34,7 @@ const createUser = async (req: Request, res: Response) => {
     newUser.password = hashedPassword;
     newUser.status = 'Offline';
     newUser.lastSeen = new Date().toString();
-    
+
     newUser.avatar = (await generateGravatarUrl(newUser.email)).toString();
 
     const savedUser = await newUser.save();
@@ -58,6 +58,10 @@ const updateUser = async (req: Request, res: Response) => {
       new: true,
     });
 
+    const io = req.app.get('io');
+    const onlineUsers = await getOnlineUsers();
+    io.emit('online-users', onlineUsers);
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -78,6 +82,10 @@ const deleteUser = async (req: Request, res: Response) => {
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
+};
+
+const getOnlineUsers = async () => {
+  return await User.find().sort({ lastSeen: -1 });
 };
 
 export default {

@@ -36,10 +36,14 @@ export class QuickChatService {
     }
 
     get chats$(): Observable<UserModel[]> {
+        if (!this._users.getValue()) {
+            this.getUsers().subscribe();
+        }
+        console.log(this._users)
         return this._users.asObservable();
     }
 
-    getChats(): Observable<any> {
+    getUsers(): Observable<any> {
         const headers = new HttpHeaders({
             Authorization: `Bearer ${this.accessToken}`,
         });

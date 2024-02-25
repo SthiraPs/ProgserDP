@@ -99,12 +99,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // Chat
-        this._quickChatService.chat$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: UserModel) => {
-                this.user = user;
-            });
 
         // Chats
         this._quickChatService.chats$
@@ -113,12 +107,8 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.users = users;
             });
 
-        // Selected chat
-        this._quickChatService.chat$
-            .pipe(takeUntil(this._unsubscribeAll))
-            .subscribe((user: UserModel) => {
-                this.selectedChat = user;
-            });
+            this._quickChatService.listenForOnlineUsers();
+
     }
 
     ngAfterViewInit(): void {
@@ -164,6 +154,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
      */
     ngOnDestroy(): void {
         // Disconnect the mutation observer
+        console.log('Destroying');
         this._mutationObserver.disconnect();
 
         // Unsubscribe from all subscriptions

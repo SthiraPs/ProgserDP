@@ -34,7 +34,7 @@ const port = process.env.PORT || 3600;
 // Apply CORS middleware for express
 app.use(
   cors({
-    origin: 'http://localhost:4200', // Allow your Angular application domain
+    origin: 'https://progser-dp.vercel.app', // Allow your Angular application domain
     credentials: true, // Allowing credentials is important for sessions to work
   })
 );

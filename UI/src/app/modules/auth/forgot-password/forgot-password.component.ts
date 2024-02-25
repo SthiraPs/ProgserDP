@@ -8,8 +8,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
-import { AuthService } from 'app/core/auth/auth.service';
 import { finalize } from 'rxjs';
+import { SignInService } from '../sign-in/services/sign-in.service';
 
 @Component({
     selector     : 'auth-forgot-password',
@@ -34,19 +34,13 @@ export class AuthForgotPasswordComponent implements OnInit
      * Constructor
      */
     constructor(
-        private _authService: AuthService,
+        private _signInService: SignInService,
         private _formBuilder: UntypedFormBuilder,
     )
     {
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Lifecycle hooks
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * On init
-     */
+    
     ngOnInit(): void
     {
         // Create the form
@@ -55,13 +49,6 @@ export class AuthForgotPasswordComponent implements OnInit
         });
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Send the reset link
-     */
     sendResetLink(): void
     {
         // Return if the form is invalid
@@ -77,7 +64,7 @@ export class AuthForgotPasswordComponent implements OnInit
         this.showAlert = false;
 
         // Forgot password
-        this._authService.forgotPassword(this.forgotPasswordForm.get('email').value)
+        this._signInService.forgotPassword(this.forgotPasswordForm.get('email').value)
             .pipe(
                 finalize(() =>
                 {

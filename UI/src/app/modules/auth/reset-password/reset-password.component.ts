@@ -10,8 +10,8 @@ import { RouterLink } from '@angular/router';
 import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertComponent, FuseAlertType } from '@fuse/components/alert';
 import { FuseValidators } from '@fuse/validators';
-import { AuthService } from 'app/core/auth/auth.service';
 import { finalize } from 'rxjs';
+import { SignInService } from '../sign-in/services/sign-in.service';
 
 @Component({
     selector     : 'auth-reset-password',
@@ -36,7 +36,7 @@ export class AuthResetPasswordComponent implements OnInit
      * Constructor
      */
     constructor(
-        private _authService: AuthService,
+        private _signInService: SignInService,
         private _formBuilder: UntypedFormBuilder,
     )
     {
@@ -84,7 +84,7 @@ export class AuthResetPasswordComponent implements OnInit
         this.showAlert = false;
 
         // Send the request to the server
-        this._authService.resetPassword(this.resetPasswordForm.get('password').value)
+        this._signInService.resetPassword(this.resetPasswordForm.get('password').value)
             .pipe(
                 finalize(() =>
                 {

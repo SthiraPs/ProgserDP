@@ -1,0 +1,200 @@
+<div class="flex flex-col flex-auto w-full">
+    <div class="flex flex-wrap w-full max-w-screen-xl mx-auto p-6 md:p-8">
+        <!-- Title and action buttons -->
+        <div class="flex items-center justify-between w-full">
+            <div>
+                <h2 class="text-3xl font-semibold tracking-tight leading-8">
+                    Admin Panel
+                </h2>
+                <div class="font-medium tracking-tight text-secondary">
+                    Change settings in this page
+                </div>
+            </div>
+            <div class="flex items-center ml-6">
+                <button
+                    class="hidden sm:inline-flex"
+                    mat-stroked-button
+                    [color]="'primary'"
+                    (click)="onClickCreateUser()"
+                >
+                    <span>Create a user</span>
+                </button>
+                <button
+                    class="hidden sm:inline-flex ml-3"
+                    mat-stroked-button
+                    [color]="'primary'"
+                >
+                    <span>Import bulk users</span>
+                </button>
+                <button class="hidden sm:inline-flex ml-3" mat-flat-button>
+                    <span>Settings</span>
+                </button>
+            </div>
+        </div>
+
+        <div
+            class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden mt-8"
+        >
+            <mat-tab-group
+                class="sm:px-2"
+                mat-stretch-tabs="false"
+                [animationDuration]="'0'"
+            >
+                <!-- User Activity -->
+                <mat-tab label="User Activity">
+                    <ng-template matTabContent>
+                        <div
+                            class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto p-6 bg-card shadow rounded-2xl overflow-hidden"
+                        >
+                            <div
+                                class="flex flex-col sm:flex-row items-start justify-between"
+                            >
+                                    <input
+                                        class="min-w-72 ml-2 py-1 border-2 p-2"
+                                        type="text"
+                                        placeholder="Enter tag name"
+                                        (input)="filterTags($event)"
+                                        (keydown)="
+                                            filterTagsInputKeyDown($event)
+                                        "
+                                        [maxLength]="50"
+                                        #newTagInput
+                                    />
+                                    <mat-button-toggle-group
+                                        value="this-week"
+                                        #githubIssuesWeekSelector="matButtonToggleGroup"
+                                    >
+                                        <mat-button-toggle value="last-week"
+                                            >Last Week</mat-button-toggle
+                                        >
+                                        <mat-button-toggle value="this-week"
+                                            >This Week</mat-button-toggle
+                                        >
+                                    </mat-button-toggle-group>
+                            </div>
+                            <div
+                                class="grid grid-cols-1 lg:grid-cols-2 grid-flow-row gap-6 w-full mt-8 sm:mt-4"
+                            >
+                                <!-- New vs. Closed -->
+                                <div class="flex flex-col flex-auto">
+                                    <div class="flex flex-col flex-auto">
+                                        <apx-chart
+                                            [series]="chartOneOptions.series"
+                                            [chart]="chartOneOptions.chart"
+                                            [xaxis]="chartOneOptions.xaxis"
+                                        ></apx-chart>
+                                    </div>
+                                </div>
+                                <!-- Overview -->
+                                <div class="flex flex-col">
+                                    <div class="font-medium text-secondary">
+                                        Overview
+                                    </div>
+                                    <div
+                                        class="flex-auto grid grid-cols-4 gap-4 mt-6"
+                                    >
+                                        <!-- New issues -->
+                                        <div
+                                            class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-indigo-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400"
+                                        >
+                                            <div
+                                                class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
+                                            >
+                                                5
+                                            </div>
+                                            <div
+                                                class="mt-1 text-sm sm:text-lg font-medium"
+                                            >
+                                                New Issues
+                                            </div>
+                                        </div>
+                                        <!-- Closed -->
+                                        <div
+                                            class="col-span-2 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-green-50 text-green-800 dark:bg-white dark:bg-opacity-5 dark:text-green-500"
+                                        >
+                                            <div
+                                                class="text-5xl sm:text-7xl font-semibold leading-none tracking-tight"
+                                            >
+                                                12
+                                            </div>
+                                            <div
+                                                class="mt-1 text-sm sm:text-lg font-medium"
+                                            >
+                                                Closed
+                                            </div>
+                                        </div>
+                                        <!-- Fixed -->
+                                        <div
+                                            class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                        >
+                                            <div
+                                                class="text-5xl font-semibold leading-none tracking-tight"
+                                            >
+                                                33
+                                            </div>
+                                            <div
+                                                class="mt-1 text-sm font-medium text-center"
+                                            >
+                                                Fixed
+                                            </div>
+                                        </div>
+                                        <!-- Won't fix -->
+                                        <div
+                                            class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                        >
+                                            <div
+                                                class="text-5xl font-semibold leading-none tracking-tight"
+                                            >
+                                                4
+                                            </div>
+                                            <div
+                                                class="mt-1 text-sm font-medium text-center"
+                                            >
+                                                Won't Fix
+                                            </div>
+                                        </div>
+                                        <!-- Re-opened -->
+                                        <div
+                                            class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                        >
+                                            <div
+                                                class="text-5xl font-semibold leading-none tracking-tight"
+                                            >
+                                                5
+                                            </div>
+                                            <div
+                                                class="mt-1 text-sm font-medium text-center"
+                                            >
+                                                Re-opened
+                                            </div>
+                                        </div>
+                                        <!-- Needs triage -->
+                                        <div
+                                            class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-gray-100 text-secondary dark:bg-white dark:bg-opacity-5"
+                                        >
+                                            <div
+                                                class="text-5xl font-semibold leading-none tracking-tight"
+                                            >
+                                                35
+                                            </div>
+                                            <div
+                                                class="mt-1 text-sm font-medium text-center"
+                                            >
+                                                Needs Triage
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </ng-template>
+                </mat-tab>
+
+                <!-- Tickets Activity -->
+                <mat-tab label="Tickets Activity">
+                    <ng-template matTabContent> </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</div>

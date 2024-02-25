@@ -2,16 +2,18 @@
     <div
         class="w-full sm:w-auto py-8 px-4 sm:p-12 sm:rounded-2xl sm:shadow sm:bg-card"
     >
-        <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+        <div
+            class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0 flex flex-col items-center"
+        >
+            <!-- Added flex and items-center -->
             <!-- Logo -->
-            <div class="w-12">
+            <div class="w-12 mb-4">
+                <!-- Added mb-4 (margin-bottom) for spacing -->
                 <img src="assets/images/logo/logo.svg" />
             </div>
 
             <!-- Title -->
-            <div
-                class="mt-8 text-4xl font-extrabold tracking-tight leading-tight"
-            >
+            <div class="text-4xl font-extrabold tracking-tight leading-tight">
                 Sign in
             </div>
 
@@ -83,10 +85,7 @@
                 <div
                     class="inline-flex items-center justify-between w-full mt-1.5"
                 >
-                    <mat-checkbox
-                        class="-ml-2"
-                        [color]="'primary'"
-                     >
+                    <mat-checkbox class="-ml-2" [color]="'primary'">
                         Remember me
                     </mat-checkbox>
                     <a

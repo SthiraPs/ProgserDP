@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AdminPanelComponent } from 'app/modules/admin/admin-panel/components/admin-panel.component';
+import { AdminPanelComponent } from 'app/modules/admin/admin-panel/components/admin-panel/admin-panel.component';
 
 export default [
     {

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import User from '../models/user';
+import User, { IUser } from '../models/user';
 import { generateGravatarUrl } from '../utils/generateGravatar';
+import UserActivity from '../models/user_activity';
 const bcrypt = require('bcryptjs');
 
 // Get all users
@@ -31,10 +32,13 @@ const createUser = async (req: Request, res: Response) => {
   try {
     const newUser = new User(req.body);
     const hashedPassword = await bcrypt.hash(newUser.password, 10); // 10 is the salt rounds
+    const lastUserId = await User.findOne().sort({ userId: -1 }).limit(1);
+    const newUserId = lastUserId ? lastUserId.userId + 1 : 1;
+
+    newUser.userId = newUserId;
     newUser.password = hashedPassword;
     newUser.status = 'Offline';
     newUser.lastSeen = new Date().toString();
-
     newUser.avatar = (await generateGravatarUrl(newUser.email)).toString();
 
     const savedUser = await newUser.save();
@@ -58,10 +62,10 @@ const updateUser = async (req: Request, res: Response) => {
       new: true,
     });
 
-    const io = req.app.get('io');
-    const onlineUsers = await getOnlineUsers();
-    io.emit('online-users', onlineUsers);
-
+    emitSocket(req);
+    if (user !== null) {
+      updateUserActivity(user);
+    }
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -94,4 +98,20 @@ export default {
   getUserById,
   updateUser,
   deleteUser,
+};
+
+const emitSocket = async (req: Request) => {
+  const io = req.app.get('io');
+  const onlineUsers = await getOnlineUsers();
+  io.emit('online-users', onlineUsers);
+};
+
+const updateUserActivity = async (user: IUser) => {
+  const newActivity = new UserActivity({
+    userId: user.userId,
+    status: user.status,
+    time: new Date().toString(),
+  });
+
+  await newActivity.save();
 };

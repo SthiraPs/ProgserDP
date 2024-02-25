@@ -20,11 +20,11 @@ const server = http.createServer(app);
 // Setup Socket.IO to allow CORS
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:4200", // Allow your Angular application domain
-    methods: ["GET", "POST"],
-    allowedHeaders: ["my-custom-header"],
-    credentials: true
-  }
+    origin: 'http://localhost:4200', // Allow your Angular application domain
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['my-custom-header'],
+    credentials: true,
+  },
 });
 
 dotenv.config();
@@ -32,11 +32,12 @@ dotenv.config();
 const port = process.env.PORT || 3600;
 
 // Apply CORS middleware for express
-app.use(cors({
-  origin: "http://localhost:4200", // Allow your Angular application domain
-  credentials: true // Allowing credentials is important for sessions to work
-}));
-
+app.use(
+  cors({
+    origin: 'http://localhost:4200', // Allow your Angular application domain
+    credentials: true, // Allowing credentials is important for sessions to work
+  })
+);
 
 // Connect to DB
 connectDB();
@@ -46,10 +47,7 @@ app.use(corsMiddleware);
 app.use(express.json());
 
 // Socket.IO connection
-io.on('connection', (socket) => {
-  console.log(`User connected: ${socket.id}`);
-});
-
+io.on('connection', (socket) => {});
 app.set('io', io);
 
 // Routes

@@ -1,7 +1,8 @@
-import User from '../models/user';
+import User, { IUser } from '../models/user';
 import { Request, Response, NextFunction } from 'express';
 import { generateJWTToken, verifyJWTToken } from '../utils/generatToken';
 import * as dotenv from 'dotenv';
+import UserActivity from '../models/user_activity';
 
 dotenv.config();
 
@@ -36,10 +37,8 @@ const signIn = async (req: Request, res: Response) => {
       await user.save();
     }
 
-    const io = req.app.get('io');
-    const onlineUsers = await getOnlineUsers();
-
-    io.emit('online-users', onlineUsers);
+    emitSocket(req);
+    updateUserActivity(user);
 
     res.json({
       user: user,
@@ -67,9 +66,7 @@ const signInWithToken = async (req: Request, res: Response) => {
       await user.save();
     }
 
-    const io = req.app.get('io');
-    const onlineUsers = await getOnlineUsers();
-    io.emit('online-users', onlineUsers);
+    emitSocket(req);
 
     res.json({
       user: cloneDeep(user),
@@ -92,9 +89,8 @@ const markUserOffline = async (req: Request, res: Response) => {
         await user.save();
       }
 
-      const io = req.app.get('io');
-      const onlineUsers = await getOnlineUsers();
-      io.emit('online-users', onlineUsers);
+      emitSocket(req);
+      updateUserActivity(user);
 
       res.json({
         status: 'Success',
@@ -111,8 +107,24 @@ const markUserOffline = async (req: Request, res: Response) => {
   }
 };
 
+const emitSocket = async (req: Request) => {
+  const io = req.app.get('io');
+  const onlineUsers = await getOnlineUsers();
+  io.emit('online-users', onlineUsers);
+};
+
 const getOnlineUsers = async () => {
   return await User.find().sort({ lastSeen: -1 });
+};
+
+const updateUserActivity = async (user: IUser) => {
+  const newActivity = new UserActivity({
+    userId: user.userId,
+    status: user.status,
+    time: new Date().toString(),
+  });
+
+  await newActivity.save();
 };
 
 export default { signIn, signInWithToken, markUserOffline };

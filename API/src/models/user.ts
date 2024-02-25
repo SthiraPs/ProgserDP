@@ -1,6 +1,7 @@
 import mongoose, { Schema, Document } from "mongoose";
 
 export interface IUser extends Document {
+  userId: number;
   fullName: string;
   email: string;
   password: string;
@@ -12,6 +13,11 @@ export interface IUser extends Document {
 }
 
 const userSchema: Schema = new mongoose.Schema({
+  userId: {
+    type: Number,
+    required: true,
+    unique: true,
+  },
   fullName: {
     type: String,
     required: false,

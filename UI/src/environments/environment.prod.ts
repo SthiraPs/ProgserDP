@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'https://your-prod-api-url.com',
+    apiUrl: 'https://progserdp-1.onrender.com',
   };
   

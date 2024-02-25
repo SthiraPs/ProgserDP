@@ -20,7 +20,7 @@ const server = http.createServer(app);
 // Setup Socket.IO to allow CORS
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:4200', // Allow your Angular application domain
+    origin: 'https://progser-dp.vercel.app', // Allow your Angular application domain
     methods: ['GET', 'POST'],
     allowedHeaders: ['my-custom-header'],
     credentials: true,

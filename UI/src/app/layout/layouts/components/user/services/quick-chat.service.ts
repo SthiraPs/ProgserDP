@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { UserModel } from 'app/modules/auth/register/model/user.model';
-import { environment } from 'environemnts/environment';
+import { environment } from 'environments/environment';
 import { io, Socket } from 'socket.io-client';
 import {
     BehaviorSubject,

@@ -4,7 +4,7 @@ import { UserModel } from '../model/user.model';
 import { ResponseModel } from 'app/modules/other/model/response.model';
 import { Observable, catchError, throwError } from 'rxjs';
 import { NotificationService } from 'app/modules/other/services/notification.service';
-import { environment } from 'environemnts/environment';
+import { environment } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root',

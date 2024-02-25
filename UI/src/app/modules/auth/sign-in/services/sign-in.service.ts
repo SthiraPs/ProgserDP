@@ -6,7 +6,7 @@ import { catchError, throwError, Observable, of, switchMap } from 'rxjs';
 import { UserModel } from '../../register/model/user.model';
 import { SigninModel } from '../model/signin.model';
 import { UserService } from 'app/layout/layouts/components/user/services/user.service';
-import { environment } from 'environemnts/environment';
+import { environment } from 'environments/environment';
 import { MatDialog } from '@angular/material/dialog';
 import { SignInPopupComponent } from '../components/sign-in-popup/sign-in-popup.component';
 

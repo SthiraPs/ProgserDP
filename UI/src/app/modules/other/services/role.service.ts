@@ -4,7 +4,7 @@ import { DepartmentModel } from '../model/department.model';
 import { NotificationService } from './notification.service';
 import { RoleModel } from '../model/role.model';
 import { catchError, throwError } from 'rxjs';
-import { environment } from 'environemnts/environment';
+import { environment } from 'environments/environment';
 
 @Injectable({
     providedIn: 'root',

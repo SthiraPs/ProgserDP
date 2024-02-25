@@ -2,7 +2,7 @@
 import cors from "cors";
 
 const corsOptions = {
-  origin: ["http://localhost:4200/"], // Explicitly allowed origins
+  origin: ["https://progser-dp.vercel.app/"], // Explicitly allowed origins
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
 };

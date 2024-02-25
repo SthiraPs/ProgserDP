@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from 'app/layout/layouts/components/user/services/user.types';
-import { environment } from 'environemnts/environment';
+import { environment } from 'environments/environment';
 import { map, Observable, ReplaySubject, tap } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

@@ -5,7 +5,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 import { ResponseModel } from '../model/response.model';
 import { NotificationService } from './notification.service';
 import { DepartmentModel } from '../model/department.model';
-import { environment } from 'environemnts/environment';
+import { environment } from 'environments/environment';
 import { SignInPopupComponent } from 'app/modules/auth/sign-in/components/sign-in-popup/sign-in-popup.component';
 import { MatDialog } from '@angular/material/dialog';
 

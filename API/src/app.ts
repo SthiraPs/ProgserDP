@@ -13,6 +13,11 @@ import departmentsRoutes from './routes/departments';
 import http from 'http';
 import { Server } from 'socket.io';
 
+dotenv.config();
+
+const port = process.env.PORT || 3600;
+const origin = process.env.ORIGIN || 'https://progser-dp.vercel.app';
+
 // Your existing app setup...
 const app: Application = express();
 const server = http.createServer(app);
@@ -20,21 +25,19 @@ const server = http.createServer(app);
 // Setup Socket.IO to allow CORS
 const io = new Server(server, {
   cors: {
-    origin: 'https://progser-dp.vercel.app', // Allow your Angular application domain
+    origin: origin, // Allow your Angular application domain
     methods: ['GET', 'POST'],
     allowedHeaders: ['my-custom-header'],
     credentials: true,
   },
 });
 
-dotenv.config();
 
-const port = process.env.PORT || 3600;
 
 // Apply CORS middleware for express
 app.use(
   cors({
-    origin: 'https://progser-dp.vercel.app', // Allow your Angular application domain
+    origin: origin, // Allow your Angular application domain
     credentials: true, // Allowing credentials is important for sessions to work
   })
 );

@@ -12,11 +12,15 @@ import { SignInPopupComponent } from './modules/auth/sign-in/components/sign-in-
     imports: [RouterOutlet],
 })
 export class AppComponent {
-    private tokenRefreshThreshold = 30000;
+    private status: String = 'Online';
+    private tokenRefreshThreshold = 5 * 60 * 1000; // 5 minutes in milliseconds
     private userActivityTimer;
 
-    private inactivityThreshold = 1 * 60 * 1000; // 5 minutes in milliseconds
+    private inactivityThreshold = 5 * 60 * 1000; // 5 minutes in milliseconds
     private inactivityTimer;
+
+    private reloginThreshold = 15 * 60 * 1000; // 15 minutes in milliseconds
+    private reloginTimer;
 
     constructor(
         private _signInService: SignInService,
@@ -32,26 +36,37 @@ export class AppComponent {
     }
 
     resetTimer() {
+        if (this.status === 'Away') {
+            this.changeUserStatus('Online');
+        }
+
         clearTimeout(this.userActivityTimer);
         clearTimeout(this.inactivityTimer);
+        clearTimeout(this.reloginTimer);
 
         this.inactivityTimer = setTimeout(
-            () => this.markUserOffline(),
+            () => this.changeUserStatus('Away'),
             this.inactivityThreshold
         );
 
         this.userActivityTimer = setTimeout(
             () => this.refreshTokenIfNeeded(),
-            5000
+            10000
+        );
+
+        this.reloginTimer = setTimeout(
+            () => this._matDialog.open(SignInPopupComponent),
+            this.reloginThreshold
         );
     }
 
-    markUserOffline() {
+    changeUserStatus(status: String) {
+        this.status = status;
+
         const email = localStorage.getItem('email');
         if (email !== null && email !== '') {
-            const dialogRef = this._matDialog.open(SignInPopupComponent);
-
-            this._signInService.markUserOffline().subscribe((res) => {});
+            //const dialogRef = this._matDialog.open(SignInPopupComponent);
+            this._signInService.changeUserStatus(status).subscribe((res) => {});
         }
     }
 

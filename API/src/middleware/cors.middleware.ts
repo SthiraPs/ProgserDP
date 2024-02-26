@@ -1,8 +1,13 @@
 // middlewares/corsMiddleware.js
 import cors from "cors";
+import * as dotenv from 'dotenv';
+
+dotenv.config();
+
+const origin = process.env.ORIGIN || 'https://progser-dp.vercel.app';
 
 const corsOptions = {
-  origin: ["https://progser-dp.vercel.app"], // Explicitly allowed origins
+  origin: [origin], // Explicitly allowed origins
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type"],
 };

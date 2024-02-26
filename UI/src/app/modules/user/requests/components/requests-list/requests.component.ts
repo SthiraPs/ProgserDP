@@ -10,12 +10,15 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatRippleModule } from '@angular/material/core';
+import { MatOptionModule, MatRippleModule } from '@angular/material/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TranslocoModule } from '@ngneat/transloco';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { MatSelectModule } from '@angular/material/select';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-requests',
@@ -35,6 +38,11 @@ import { NgApexchartsModule } from 'ng-apexcharts';
         MatTableModule,
         NgClass,
         CurrencyPipe,
+        MatSelectModule,
+        MatOptionModule,
+        NgClass,
+        MatFormFieldModule,
+        FormsModule,
     ],
     templateUrl: './requests.component.html',
     styleUrl: './requests.component.scss',
@@ -49,6 +57,7 @@ export class RequestsComponent {
         'amount',
         'status',
     ];
+    formFieldHelpers: string[] = [''];
 
     constructor(private _router: Router) {}
 

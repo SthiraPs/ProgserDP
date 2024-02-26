@@ -74,7 +74,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
         private _renderer2: Renderer2,
         private _ngZone: NgZone,
         private _quickChatService: QuickChatService,
-        private _scrollStrategyOptions: ScrollStrategyOptions,
+        private _scrollStrategyOptions: ScrollStrategyOptions
     ) {}
 
     @HostBinding('class') get classList(): any {
@@ -99,7 +99,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
         // Chats
         this._quickChatService.chats$
             .pipe(takeUntil(this._unsubscribeAll))
@@ -107,8 +106,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.users = users;
             });
 
-            this._quickChatService.listenForOnlineUsers();
-
+        this._quickChatService.listenForOnlineUsers();
     }
 
     ngAfterViewInit(): void {
@@ -149,9 +147,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    /**
-     * On destroy
-     */
     ngOnDestroy(): void {
         // Disconnect the mutation observer
         console.log('Destroying');
@@ -162,15 +157,7 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Open the panel
-     */
     open(): void {
-        // Return if the panel has already opened
         if (this.opened) {
             return;
         }
@@ -197,38 +184,17 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    /**
-     * Select the chat
-     *
-     * @param id
-     */
     selectChat(id: string): void {
-        // Open the panel
-        this._toggleOpened(true);
-
-        // Get the chat data
-        this._quickChatService.getChatById(id).subscribe();
+        // // Open the panel
+        // this._toggleOpened(true);
+        // // Get the chat data
+        // this._quickChatService.getChatById(id).subscribe();
     }
 
-    /**
-     * Track by function for ngFor loops
-     *
-     * @param index
-     * @param item
-     */
     trackByFn(index: number, item: any): any {
         return item.id || index;
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Private methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Show the backdrop
-     *
-     * @private
-     */
     private _showOverlay(): void {
         // Try hiding the overlay in case there is one already opened
         this._hideOverlay();
@@ -259,11 +225,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    /**
-     * Hide the backdrop
-     *
-     * @private
-     */
     private _hideOverlay(): void {
         if (!this._overlay) {
             return;
@@ -280,12 +241,6 @@ export class QuickChatComponent implements OnInit, AfterViewInit, OnDestroy {
         this._scrollStrategy.disable();
     }
 
-    /**
-     * Open/close the panel
-     *
-     * @param open
-     * @private
-     */
     private _toggleOpened(open: boolean): void {
         // Set the opened
         this.opened = open;

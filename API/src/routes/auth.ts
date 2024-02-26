@@ -6,6 +6,6 @@ const router = Router();
 
 router.post('/sign-in', authController.signIn);
 router.post('/sign-in-with-token', authenticateToken, authController.signInWithToken);
-router.post('/mark-user-offline', authController.markUserOffline);
+router.post('/change-user-status', authController.changeUserStatus);
 
 export default router;

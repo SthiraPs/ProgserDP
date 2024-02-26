@@ -1,77 +1,82 @@
-
+<div
+    class="flex flex-col w-full sm:w-96 h-full transition-transform duration-400 ease-drawer bg-card"
+    [ngClass]="{
+        '-translate-x-full sm:-translate-x-96 lg:-translate-x-80 shadow':
+            opened,
+        'translate-x-0': !opened
+    }"
+>
+    <!-- Header -->
     <div
-        class="flex flex-col w-full sm:w-96 h-full transition-transform duration-400 ease-drawer bg-card"
-        [ngClass]="{
-            '-translate-x-full sm:-translate-x-96 lg:-translate-x-80 shadow':
-                opened,
-            'translate-x-0': !opened
-        }"
+        class="quick-chat-header flex flex-0 items-center justify-start cursor-pointer"
     >
-        <!-- Content -->
-        <div class="flex flex-auto border-t overflow-hidden">
-            <!-- Chat list -->
-            <div
-                class="flex-0 w-16 h-full overflow-y-auto overscroll-y-contain sm:overflow-hidden sm:overscroll-auto"
-                fuseScrollbar
-                [fuseScrollbarOptions]="{ wheelPropagation: false }"
-            >
-                <div class="flex-auto">
-                    <ng-container
-                        *ngFor="let user of users; trackBy: trackByFn"
+        <div class="flex flex-0 items-center justify-center w-16">
+            <mat-icon
+                class="icon-size-6"
+                [svgIcon]="'heroicons_outline:users'"
+            ></mat-icon>
+        </div>
+
+    </div>
+    <!-- Content -->
+    <div class="flex flex-auto overflow-hidden">
+        <!-- Chat list -->
+        <div
+            class="flex-0 w-16 h-full overflow-y-auto overscroll-y-contain sm:overflow-hidden sm:overscroll-auto"
+            fuseScrollbar
+            [fuseScrollbarOptions]="{ wheelPropagation: false }"
+        >
+            <div class="flex-auto">
+                <ng-container *ngFor="let user of users; trackBy: trackByFn">
+                    <div
+                        class="flex items-center py-3 px-4 cursor-pointer"
+                        [ngClass]="{
+                            'hover:bg-gray-100 dark:hover:bg-hover':
+                                !selectedChat || selectedChat.id !== user.id,
+                            'bg-primary-50 dark:bg-hover':
+                                selectedChat && selectedChat.id === user.id
+                        }"
+                        (click)="selectChat(user._id)"
                     >
                         <div
-                            class="flex items-center py-3 px-4 cursor-pointer"
-                            [ngClass]="{
-                                'hover:bg-gray-100 dark:hover:bg-hover':
-                                    !selectedChat ||
-                                    selectedChat.id !== user.id,
-                                'bg-primary-50 dark:bg-hover':
-                                    selectedChat && selectedChat.id === user.id
-                            }"
-                            (click)="selectChat(user._id)"
+                            class="relative flex flex-0 items-center justify-center w-8 h-8"
                         >
-                            <div
-                                class="relative flex flex-0 items-center justify-center w-8 h-8"
-                            >
-                                <ng-container *ngIf="user.avatar">
-                                    <span
-                                        class="w-full h-full rounded-full object-cover bg-gray-200 flex items-center justify-center"
-                                        alt="Contact avatar"
-                                    >
-                                        {{
-                                            (user.fullName.split(" ")[0]
+                            <ng-container *ngIf="user.avatar">
+                                <span
+                                    class="w-full h-full rounded-full object-cover bg-gray-200 flex items-center justify-center"
+                                    alt="Contact avatar"
+                                >
+                                    {{
+                                        (user.fullName.split(" ")[0]
+                                            ? user.fullName
+                                                  .split(" ")[0]
+                                                  .substring(0, 1)
+                                            : ""
+                                        ).toUpperCase() +
+                                            (user.fullName.split(" ")[1]
                                                 ? user.fullName
-                                                      .split(" ")[0]
+                                                      .split(" ")[1]
                                                       .substring(0, 1)
                                                 : ""
-                                            ).toUpperCase() +
-                                                (user.fullName.split(" ")[1]
-                                                    ? user.fullName
-                                                          .split(" ")[1]
-                                                          .substring(0, 1)
-                                                    : ""
-                                                ).toUpperCase()
-                                        }}
-                                    </span>
-                                    <span
-                                        class="absolute right-0 bottom-0 w-2 h-2 rounded-full"
-                                        [ngClass]="{
-                                            'bg-green-500':
-                                                user.status === 'Online',
-                                            'bg-amber-500':
-                                                user.status === 'Away',
-                                            'bg-red-500':
-                                                user.status === 'Busy',
-                                            'bg-gray-400':
-                                                user.status === 'Invisible'
-                                        }"
-                                    ></span>
-                                </ng-container>
-                            </div>
+                                            ).toUpperCase()
+                                    }}
+                                </span>
+                                <span
+                                    class="absolute right-0 bottom-0 w-2 h-2 rounded-full"
+                                    [ngClass]="{
+                                        'bg-green-500':
+                                            user.status === 'Online',
+                                        'bg-amber-500': user.status === 'Away',
+                                        'bg-red-500': user.status === 'Busy',
+                                        'bg-gray-400':
+                                            user.status === 'Invisible'
+                                    }"
+                                ></span>
+                            </ng-container>
                         </div>
-                    </ng-container>
-                </div>
+                    </div>
+                </ng-container>
             </div>
         </div>
     </div>
- 
+</div>

@@ -12,6 +12,7 @@ const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // For password hashing
 const JWT_SECRET = process.env.JWT_SECRET || '';
+const EXP_TIME = process.env.EXP_TIME || '15m';
 
 const signIn = async (req: Request, res: Response) => {
   try {
@@ -29,7 +30,7 @@ const signIn = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
+    const accessToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: EXP_TIME });
 
     if (user.status !== 'Invisible') {
       user.status = 'Online';
@@ -58,7 +59,7 @@ const signInWithToken = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Invalid credentials' });
     }
 
-    const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: '1m' });
+    const newToken = jwt.sign({ id: user._id }, JWT_SECRET, { expiresIn: EXP_TIME });
 
     if (user.status !== 'Invisible') {
       user.status = 'Online';
@@ -77,14 +78,16 @@ const signInWithToken = async (req: Request, res: Response) => {
   }
 };
 
-const markUserOffline = async (req: Request, res: Response) => {
+const changeUserStatus = async (req: Request, res: Response) => {
   try {
     const email = req.body.email;
+    const status = req.body.status;
+    
     const user = await User.findOne({ email: email });
 
     if (user) {
       if (user.status !== 'Invisible') {
-        user.status = 'Away';
+        user.status = status;
         user.lastSeen = new Date().toString();
         await user.save();
       }
@@ -127,4 +130,4 @@ const updateUserActivity = async (user: IUser) => {
   await newActivity.save();
 };
 
-export default { signIn, signInWithToken, markUserOffline };
+export default { signIn, signInWithToken, changeUserStatus };

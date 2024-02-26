@@ -47,10 +47,10 @@ export class ModernLayoutComponent implements OnInit, OnDestroy {
     navigation: Navigation;
     private _unsubscribeAll: Subject<any> = new Subject<any>();
     private readonly _defaultNavigation: FuseNavigationItem[] =
-    defaultNavigation;
-private readonly _horizontalNavigation: FuseNavigationItem[] =
-    horizontalNavigation;
-    
+        defaultNavigation;
+    private readonly _horizontalNavigation: FuseNavigationItem[] =
+        horizontalNavigation;
+
     constructor(
         private _activatedRoute: ActivatedRoute,
         private _router: Router,
@@ -74,18 +74,13 @@ private readonly _horizontalNavigation: FuseNavigationItem[] =
             });
         });
 
-        // Return the response
-        this.navigation = 
-            {
-                compact: null,
-                default: cloneDeep(this._defaultNavigation),
-                futuristic: null,
-                horizontal: cloneDeep(this._horizontalNavigation),
-            };
-          
+        this.navigation = {
+            compact: null,
+            default: cloneDeep(this._defaultNavigation),
+            futuristic: null,
+            horizontal: cloneDeep(this._horizontalNavigation),
+        };
 
-
-        // Subscribe to media changes
         this._fuseMediaWatcherService.onMediaChange$
             .pipe(takeUntil(this._unsubscribeAll))
             .subscribe(({ matchingAliases }) => {
@@ -94,33 +89,29 @@ private readonly _horizontalNavigation: FuseNavigationItem[] =
             });
     }
 
-    /**
-     * On destroy
-     */
     ngOnDestroy(): void {
-        // Unsubscribe from all subscriptions
         this._unsubscribeAll.next(null);
         this._unsubscribeAll.complete();
     }
 
-    // -----------------------------------------------------------------------------------------------------
-    // @ Public methods
-    // -----------------------------------------------------------------------------------------------------
-
-    /**
-     * Toggle navigation
-     *
-     * @param name
-     */
-    toggleNavigation(name: string): void {
-        // Get the navigation
+    onClickUsers(name : string) {
         const navigation =
             this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
                 name
             );
 
         if (navigation) {
-            // Toggle the opened status
+            navigation.toggle();
+        }
+    }
+
+    toggleNavigation(name: string): void {
+        const navigation =
+            this._fuseNavigationService.getComponent<FuseVerticalNavigationComponent>(
+                name
+            );
+
+        if (navigation) {
             navigation.toggle();
         }
     }

@@ -8,7 +8,7 @@
         class="dark bg-gray-900 print:hidden"
         [mode]="'over'"
         [name]="'mainNavigation'"
-        [navigation]="navigation.default"
+        [navigation]="navigation.horizontal"
         [opened]="false"
     >
         <!-- Navigation header hook -->
@@ -76,7 +76,7 @@
                 (click)="quickChat.toggle()"
             >
                 <mat-icon
-                    [svgIcon]="'heroicons_outline:chat-bubble-left-right'"
+                    [svgIcon]="'heroicons_outline:users'"
                 ></mat-icon>
             </button>
             <user></user>
@@ -105,7 +105,8 @@
 >
     <!-- Quick chat -->
     <quick-chat
-        #quickChat="quickChat"
+         #quickChat="quickChat"
         class="fixed top-0 bottom-0"
     ></quick-chat>
 </div>
+

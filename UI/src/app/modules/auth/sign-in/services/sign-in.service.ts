@@ -57,6 +57,8 @@ export class SignInService {
     }
 
     signInUsingToken(): Observable<any> {
+        console.log('Refreshing token!');
+
         const headers = new HttpHeaders({
             Authorization: `Bearer ${this.accessToken}`,
         });
@@ -88,7 +90,7 @@ export class SignInService {
     }
 
     async signOut(): Promise<Observable<any>> {
-        await this.markUserOffline().subscribe((res) => {});
+        await this.changeUserStatus('Away').subscribe((res) => {});
 
         localStorage.removeItem('accessToken');
         localStorage.removeItem('email');
@@ -139,13 +141,16 @@ export class SignInService {
         return this.signInUsingToken();
     }
 
-    markUserOffline() {
+    changeUserStatus(status: String) {
+        console.log(`User is ${status}`);
+
         const payload = {
             email: this.userEmail,
+            status: status,
         };
 
         return this._httpClient
-            .post(`${this.baseUrl}/mark-user-offline`, payload)
+            .post(`${this.baseUrl}/change-user-status`, payload)
             .pipe(
                 catchError((error) => {
                     localStorage.removeItem('accessToken');

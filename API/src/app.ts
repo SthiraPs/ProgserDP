@@ -63,5 +63,6 @@ app.use('/api/departments', departmentsRoutes);
 app.all('*', catchAllMiddleware);
 
 server.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on port : ${port}`);
 });
+
